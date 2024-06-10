@@ -8,7 +8,7 @@
         <label for="credencial"> Añadir Credenciales</label>
       </div>
       <button :disabled="!fileSelected" @click="convertToJson">Crear Formato</button>
-      <a href="/src/assets/doc/Plantilla_BaseDatos.xlsx" download>
+      <a href="/doc/Plantilla_BaseDatos.xlsx" download>
         <button>Descargar Plantilla</button>
       </a>
     </div>
@@ -277,7 +277,6 @@ const convertToJson = () => {
         doc.addPage(); // Agregar una nueva página si se alcanza el límite de la página actual y no es el último objeto
       }
     }
-  doc.save('Formatos.pdf');
   const pdfBase64 = doc.output('datauristring');
   document.querySelector('iframe').src = pdfBase64;
 };
