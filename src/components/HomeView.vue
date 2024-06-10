@@ -3,7 +3,11 @@
   <div class="flex justify-evenly items-center min-h-[400px]">
     <div class="flex flex-col gap-4">
       <input id="fileXLS" type="file" @change="handleFileUpload" accept=".xls,.xlsx">
-      <button :disabled=" valores.length=== 0" @click="convertToJson">Crear Formato</button>
+      <div class="form-group">
+        <input type="checkbox" name="credencial" id="credencial">
+        <label for="credencial"> Añadir Credenciales</label>
+      </div>
+      <button :disabled="!fileSelected" @click="convertToJson">Crear Formato</button>
       <a href="/src/assets/doc/Plantilla_BaseDatos.xlsx" download>
         <button>Descargar Plantilla</button>
       </a>
@@ -20,11 +24,16 @@ import readXlsxFile from 'read-excel-file';
 import jsPDF from 'jspdf';
 
 const valores = ref([]);
+const fileSelected = ref(false)
 
 const handleFileUpload = async () => {
   const input = document.getElementById("fileXLS");
   const rows = await readXlsxFile(input.files[0]);
-  
+  if (rows.length>0) {
+    fileSelected.value=true
+  }else{
+    fileSelected.value=false
+  }
   const headers = rows[0];
   const dataRows = rows.slice(1);
 
@@ -66,8 +75,8 @@ const convertToJson = () => {
     const scaleFactor =doc.internal.scaleFactor;
     let texto = ""
     for (let i = 0; i < valores.value.length; i++) {
-      doc.addImage("./src/assets/img/logo.jpg",10,0,90,30)
-      doc.addImage("./src/assets/img/curso.jpg",170,0,30,30)
+      doc.addImage("/img/logo.jpg",10,0,90,30)
+      doc.addImage("/img/curso.jpg",170,0,30,30)
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
       doc.text('FORMATO DC-3', doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
