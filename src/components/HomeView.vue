@@ -1,11 +1,16 @@
 <template>
-  <div class="flex flex-col gap-y-5 justify-center items-center">
-    <h1 class="text-white">Subir Excel</h1>
-    <input id="fileXLS" type="file" @change="handleFileUpload">
-    <button @click="convertToJson">Crear</button>
-
-    <iframe ref="pdfPreview" width="100%" height="500"></iframe>
-
+  <h1 class="text-white mt-10">Generador de Formatos</h1>
+  <div class="flex justify-evenly items-center min-h-[400px]">
+    <div class="flex flex-col gap-4">
+      <input id="fileXLS" type="file" @change="handleFileUpload" accept=".xls,.xlsx">
+      <button :disabled=" valores.length=== 0" @click="convertToJson">Crear Formato</button>
+      <a href="/src/assets/doc/Plantilla_BaseDatos.xlsx" download>
+        <button>Descargar Plantilla</button>
+      </a>
+    </div>
+    <div v-if="valores.length">
+      <iframe  ref="pdfPreview" width="150%" height="350"></iframe>
+    </div>
   </div>
 </template>
 
@@ -16,18 +21,31 @@ import jsPDF from 'jspdf';
 
 const valores = ref([]);
 
-const handleFileUpload = () => {
+const handleFileUpload = async () => {
   const input = document.getElementById("fileXLS");
-  readXlsxFile(input.files[0]).then((rows) => {
-    valores.value = rows;
+  const rows = await readXlsxFile(input.files[0]);
+  
+  const headers = rows[0];
+  const dataRows = rows.slice(1);
+
+  const dataArray = dataRows.map((row) => {
+    const item = {};
+
+    for (let i = 0; i < headers.length; i++) {
+      item[headers[i]] = row[i];
+    }
+
+    return item;
   });
+  valores.value = dataArray;
+  // console.log(valores.value)
 };
 
 const convertToJson = () => {
   const datos = {
     name:"Brian Roberto Salas Pardo",
     curp:"SAPB010313HVZLRRA7",
-    ocupacion: " 03 CONSTRUCCION",
+    ocupacion: "03 CONSTRUCCION",
     puesto: "Programador",
     empresa:"INDHECA GRUPO CONSTRUCTOR",
     SCHP:"IGC-050407-LA9",
@@ -47,6 +65,7 @@ const convertToJson = () => {
     const docWidth = doc.internal.pageSize.getWidth();
     const scaleFactor =doc.internal.scaleFactor;
     let texto = ""
+    for (let i = 0; i < valores.value.length; i++) {
       doc.addImage("./src/assets/img/logo.jpg",10,0,90,30)
       doc.addImage("./src/assets/img/curso.jpg",170,0,30,30)
       doc.setFont('helvetica', 'bold');
@@ -78,7 +97,7 @@ const convertToJson = () => {
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
-      doc.text(datos.name, gethalf(doc.getStringUnitWidth(datos.name),14,docWidth+2,scaleFactor),55);
+      doc.text(valores.value[i].nombre.toUpperCase(), gethalf(doc.getStringUnitWidth(valores.value[i].nombre),14,docWidth+2,scaleFactor),55);
 
       //Rectangulos del curp y ocupacion
       doc.rect(10,56, (doc.internal.pageSize.getWidth()/2)-10,10) //Rectangulo CURP
@@ -104,12 +123,12 @@ const convertToJson = () => {
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7);
-      doc.text(' Ocupación específica (Catálogo Nacional de Ocupaciones)', doc.internal.pageSize.getWidth()/2,59);
+      doc.text('Ocupación específica (Catálogo Nacional de Ocupaciones)', (doc.internal.pageSize.getWidth()/2)+2,59);
       //Dato ocupacion
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(8);
-      doc.text(datos.ocupacion,doc.internal.pageSize.getWidth()/2,64)
+      doc.text(datos.ocupacion,(doc.internal.pageSize.getWidth()/2)+2,64)
       //Curp
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
@@ -119,7 +138,7 @@ const convertToJson = () => {
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(8);
-      doc.text(datos.curp, 11,64);
+      doc.text(valores.value[i].curp, 11,64);
       //Puesto
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
@@ -129,7 +148,7 @@ const convertToJson = () => {
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.text(datos.puesto, 11,74);  
+      doc.text(valores.value[i].puesto.toUpperCase(), 11,74);  
       //Empresa
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
@@ -139,7 +158,7 @@ const convertToJson = () => {
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.text(datos.empresa, 11,91);
+      doc.text(valores.value[i].razon_social, 11,91);
       //Registro federal Contribuyentes
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
@@ -149,7 +168,7 @@ const convertToJson = () => {
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.text(datos.SCHP, 11,102);
+      doc.text(valores.value[i].rfc, 11,102);
       //Nombre del Curso
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
@@ -159,7 +178,7 @@ const convertToJson = () => {
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.text(datos.curso, gethalf(doc.getStringUnitWidth(datos.curso),10,docWidth-1,scaleFactor), 118);
+      doc.text(valores.value[i].curso, gethalf(doc.getStringUnitWidth(valores.value[i].curso),10,docWidth-1,scaleFactor), 118);
       // Duracion en horas
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
@@ -169,7 +188,7 @@ const convertToJson = () => {
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.text(datos.duracion, 30, 128);
+      doc.text(valores.value[i].duracion, 30, 128);
       // Periodo de Ejecucion
       // Duracion en horas
       doc.setTextColor(0, 0, 0);
@@ -192,12 +211,12 @@ const convertToJson = () => {
       //Fechas
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.text(datos.yearInicio, 97, 128);
-      doc.text(datos.monthInicio, 117, 128);
-      doc.text(datos.dayInicio, 130, 128);
-      doc.text(datos.yearFin, 158, 128);
-      doc.text(datos.monthFin, 179, 128);
-      doc.text(datos.dayFin, 192, 128);
+      doc.text(valores.value[i].fecha_inicio.getFullYear().toString(), 97, 128);
+      doc.text((valores.value[i].fecha_inicio.getMonth()+1).toString(), 117, 128);
+      doc.text((valores.value[i].fecha_inicio.getDate()+1).toString(), 130, 128);
+      doc.text(valores.value[i].fecha_termino.getFullYear().toString(), 158, 128);
+      doc.text((valores.value[i].fecha_termino.getMonth()+1).toString(), 179, 128);
+      doc.text((valores.value[i].fecha_termino.getDate()+1).toString(), 192, 128);
       //Area Tematica curso
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
@@ -206,7 +225,7 @@ const convertToJson = () => {
       //Area tematica curso datos
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.text(datos.areaCurso, 11, 138);
+      doc.text(valores.value[i].area.toUpperCase(), 11, 138);
       //Capacitador
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
@@ -217,8 +236,8 @@ const convertToJson = () => {
       //Area tematica curso datos
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.text(datos.capacitador, 11, 148);
-      doc.text(datos.acestps, 98, 148);
+      doc.text(datos.capacitador.toUpperCase(), 11, 148);
+      doc.text(datos.acestps.toUpperCase(), 98, 148);
       //Informacion de firmas
       doc.setFontSize(6.6);
       
@@ -245,6 +264,11 @@ const convertToJson = () => {
       doc.text("LIC. VERÓNICA ZEPEDA USCANGA", 145 ,190);
       doc.line(140,192,186,192)
 
+      if (i !== valores.value.length - 1) {
+        doc.addPage(); // Agregar una nueva página si se alcanza el límite de la página actual y no es el último objeto
+      }
+    }
+  doc.save('Formatos.pdf');
   const pdfBase64 = doc.output('datauristring');
   document.querySelector('iframe').src = pdfBase64;
 };
@@ -255,5 +279,6 @@ function gethalf(texto,fontsize,docWidth, scale){
   var textX = (docWidth - textWidth) / 2;
   return textX
 }
+
 </script>
 
