@@ -14,7 +14,7 @@
           <input id="fileImg" ref="imageInput1" @change="handleFileChange(1)" type="file" accept=".jpg,.png">
         </div>
         <div class="flex flex-col justify-center items-center">
-          <label>Ingresar Logo </label>
+          <label>Ingresar Logo Curso</label>
           <input id="fileImg" ref="imageInput2" @change="handleFileChange(2)" type="file" accept=".jpg,.png">
         </div>
         <div class="flex flex-col justify-center items-center">
@@ -137,9 +137,9 @@ const convertToJson = () => {
       
       //Rectangulo Encabezado
       doc.setFillColor(0, 0, 0);
-      doc.rect(9.9, 39, doc.internal.pageSize.getWidth()-19.9,7 , 'F');//Datos Trabajador
-      doc.rect(9.9, 76, doc.internal.pageSize.getWidth() -19.9,7 , 'F');//Datos Empresa
-      doc.rect(9.9, 103, doc.internal.pageSize.getWidth() -19.9,7 , 'F');//DATOS DEL PROGRAMA DE CAPACITACIÓN,
+      doc.rect(9.9, 39, doc.internal.pageSize.getWidth()-19.8,7 , 'F');//Datos Trabajador
+      doc.rect(9.9, 76, doc.internal.pageSize.getWidth() -19.8,7 , 'F');//Datos Empresa
+      doc.rect(9.9, 103, doc.internal.pageSize.getWidth() -19.8,7 , 'F');//DATOS DEL PROGRAMA DE CAPACITACIÓN,
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
       doc.setTextColor(255, 255, 255);
@@ -157,7 +157,7 @@ const convertToJson = () => {
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
-      doc.text(valores.value[i].nombre.toUpperCase(), gethalf(doc.getStringUnitWidth(valores.value[i].nombre),14,docWidth+2,scaleFactor),55);
+      doc.text(valores.value[i].nombre.toUpperCase(), gethalf(doc.getStringUnitWidth(valores.value[i].nombre),14,docWidth-20,scaleFactor),55);
 
       //Rectangulos del curp y ocupacion
       doc.rect(10,56, (doc.internal.pageSize.getWidth()/2)-10,10) //Rectangulo CURP
