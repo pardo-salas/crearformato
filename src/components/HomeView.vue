@@ -373,11 +373,11 @@ const convertToJson = () => {
 
       doc.setFontSize(6);
       doc.setFont('helvetica', 'bold')
-      doc.text(instructor.value.toUpperCase(), 28 ,190);
+      doc.text(instructor.value.toUpperCase(), gethalf(doc.getStringUnitWidth(instructor.value),6,45,scaleFactor)+20 ,190);
       doc.line(20,192,65,192)
-      doc.text(replegal.value.toUpperCase(), 82 ,190);
+      doc.text(replegal.value.toUpperCase(), gethalf(doc.getStringUnitWidth(replegal.value),6,55,scaleFactor)+75 ,190);
       doc.line(75,192,130,192)
-      doc.text(pretrabajador.value.toUpperCase(), 145 ,190);
+      doc.text(pretrabajador.value.toUpperCase(), gethalf(doc.getStringUnitWidth(replegal.value),6,55,scaleFactor)+140 ,190);
       doc.line(140,192,186,192)
 
       if (i !== valores.value.length - 1) {
