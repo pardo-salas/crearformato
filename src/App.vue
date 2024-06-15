@@ -4,14 +4,12 @@ import FooterView from './components/FooterView.vue';
 </script>
 
 <template>
-  <div class="flex flex-col">
-    <div class="">
+    <div class="container">
       <HomeView  />
     </div>
-    <div> 
+    <div class=""> 
       <FooterView/>
     </div>
-  </div>
 </template>
 
 <style scoped>
