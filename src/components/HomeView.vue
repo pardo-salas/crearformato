@@ -1,27 +1,81 @@
 <template>
   <h1 class="text-white mt-10">Generador de Formatos</h1>
-  <div class="flex justify-evenly items-center min-h-[400px]">
-    <div class="flex flex-col gap-4">
-      <input id="fileXLS" type="file" @change="handleFileUpload" accept=".xls,.xlsx">
-      <div class="form-group">
-        <input type="checkbox" name="credencial" id="credencial">
-        <label for="credencial"> Añadir Credenciales</label>
-      </div>
-      <button :disabled="!fileSelected" @click="convertToJson">Crear Formato</button>
-      <a href="/doc/Plantilla_BaseDatos.xlsx" download>
+    <div class="flex justify-center items-center my-8 w-full">
+      <!-- <a href="/doc/Plantilla_BaseDatos.xlsx" download>
         <button>Descargar Plantilla</button>
-      </a>
+      </a> -->
+      <div class="flex flex-col gap-2 m-2 p-2">
+        <div class="flex flex-col justify-center items-center">
+          <label>Ingresar Base de Datos</label>
+          <input id="fileXLS" type="file" @change="handleFileUpload" accept=".xls,.xlsx">
+        </div>
+        <div class="flex flex-col justify-center items-center">
+          <label>Ingresar Logo</label>
+          <input id="fileImg" ref="imageInput1" @change="handleFileChange(1)" type="file" accept=".jpg,.png">
+        </div>
+        <div class="flex flex-col justify-center items-center">
+          <label>Ingresar Logo </label>
+          <input id="fileImg" ref="imageInput2" @change="handleFileChange(2)" type="file" accept=".jpg,.png">
+        </div>
+        <div class="flex flex-col justify-center items-center">
+
+        </div>
+        <!-- Ocupacion -->
+        <div class="grid grid-cols-1 items-start">
+          <label for="ocupacion">Ocupacion: </label>
+          <input type="text" name="ocupacion" v-model="ocupacion" id="ocupacion">
+        </div>
+        <!-- Capacitador -->
+        <div class="grid grid-cols-1 items-start">
+          <label for="capacitador">Capacitador: </label>
+          <input type="text" name="capacitador" v-model="capacitador" id="capacitador">
+        </div>
+        <!-- REGISTRO ACE STPS -->
+        <div class="grid grid-cols-1 items-start">
+          <label for="acestps">Registro ACE STPS: </label>
+          <input type="text" name="acestps" v-model="acestps" id="acestps">
+        </div>
+        <!-- Instructor o Tutor -->
+        <div class="grid grid-cols-1 items-start">
+          <label for="instructor">Instructor o Tutor: </label>
+          <input type="text" name="instructor" v-model="instructor" id="instructor">
+        </div>
+        <!-- Patron o representante legal -->
+        <div class="grid grid-cols-1 items-start">
+          <label for="replegal">Patron o representante legal: </label>
+          <input type="text" name="replegal" v-model="replegal" id="replegal">
+        </div>
+        <!-- Representante de los trabajadores -->
+        <div class="grid grid-cols-1 items-start">
+          <label for="pretrabajador">Representante de los trabajadores: </label>
+          <input type="text" name="pretrabajador" v-model="pretrabajador" id="pretrabajador">
+        </div>
+      </div>
+
+      <div class="p-4" v-if="valores.length">
+        <iframe  ref="pdfPreview" width="500" height="500"></iframe>
+      </div>
     </div>
-    <div v-if="valores.length">
-      <iframe  ref="pdfPreview" width="150%" height="350"></iframe>
-    </div>
-  </div>
+  <button :disabled="!fileSelected" @click="convertToJson">Crear Formato</button>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import readXlsxFile from 'read-excel-file';
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
+let ocupacion = ref("");
+let capacitador= ref("");
+let acestps = ref("")
+let instructor = ref("")
+let replegal = ref("")
+let pretrabajador = ref("")
+
+let imgLogo = ref(null);
+let imgLogo2 = ref(null);
+const imageInput1 = ref(null);
+const imageInput2 = ref(null);
 
 const valores = ref([]);
 const fileSelected = ref(false)
@@ -48,35 +102,32 @@ const handleFileUpload = async () => {
   });
   valores.value = dataArray;
   // console.log(valores.value)
+}
+
+const handleFileChange = (index) => {
+  const fileInput = index === 1 ? imageInput1.value : imageInput2.value;
+  if (fileInput && fileInput.files && fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    const imageURL = URL.createObjectURL(file);
+    if (index === 1) {
+      imgLogo.value = imageURL;
+    } else if (index === 2) {
+      imgLogo2.value = imageURL;
+    }
+  }
 };
 
 const convertToJson = () => {
-  const datos = {
-    name:"Brian Roberto Salas Pardo",
-    curp:"SAPB010313HVZLRRA7",
-    ocupacion: "03 CONSTRUCCION",
-    puesto: "Programador",
-    empresa:"INDHECA GRUPO CONSTRUCTOR",
-    SCHP:"IGC-050407-LA9",
-    curso:"REGLAMENTO FEDERAL DE SEGURIDAD, HIGIENE Y MEDIO AMBIENTE DE TRABAJO",
-    duracion: "8 HRS.",
-    yearInicio:"2024",
-    monthInicio:"05",
-    dayInicio:"01",
-    yearFin:"2024",
-    monthFin:"05",
-    dayFin:"01",
-    areaCurso:"6400 HIGIENE Y SEGURIDAD EN EL TRABAJO",
-    capacitador:"AVILA GARCIA DAVID",
-    acestps:"AIGD830407-BH2-0005"
-  }
   const doc = new jsPDF();
     const docWidth = doc.internal.pageSize.getWidth();
     const scaleFactor =doc.internal.scaleFactor;
     let texto = ""
+    let imagen1 = imgLogo.value == null ? "/img/logo.jpg" : imgLogo.value
+    let imagen2 = imgLogo2.value == null ? "/img/curso.jpg" : imgLogo2.value
+
     for (let i = 0; i < valores.value.length; i++) {
-      doc.addImage("/img/logo.jpg",10,0,90,30)
-      doc.addImage("/img/curso.jpg",170,0,30,30)
+      doc.addImage(imagen1,10,0,90,30)
+      doc.addImage(imagen2,170,0,30,30)
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
       doc.text('FORMATO DC-3', doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
@@ -113,7 +164,7 @@ const convertToJson = () => {
       doc.rect((doc.internal.pageSize.getWidth()/2),56,( doc.internal.pageSize.getWidth()/2)-10 ,10) // Rectangulo ocupacion
       doc.rect(10,66,doc.internal.pageSize.getWidth()-20 ,10) // Rectangulo Puesto
       doc.rect(10,83,doc.internal.pageSize.getWidth()-20 ,10) // Rectangulo Nombre Empresa
-      doc.rect(10,93,doc.internal.pageSize.getWidth()-20 ,10) // Rectangulo registro
+      doc.rect(10,93,doc.internal.pageSize.getWidth()-20 ,10) // Rectangulo RFC
       doc.rect(10,110,doc.internal.pageSize.getWidth()-20 ,10) // Rectangulo curso
       doc.rect(10,120,50 ,10) // Rectangulo duracion
       doc.rect(60,120,28 ,10) // Rectangulo periodo
@@ -137,7 +188,7 @@ const convertToJson = () => {
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(8);
-      doc.text(datos.ocupacion,(doc.internal.pageSize.getWidth()/2)+2,64)
+      doc.text(ocupacion.value,(doc.internal.pageSize.getWidth()/2)+2,64)
       //Curp
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
@@ -147,7 +198,14 @@ const convertToJson = () => {
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(8);
-      doc.text(valores.value[i].curp, 11,64);
+      let x = 15.2;
+      let sum = ((doc.internal.pageSize.getWidth()/2)-10) / 18
+      for (let index = 0; index < 18; index++) {
+        doc.text(valores.value[i].curp[index], x-3.8,65);
+        doc.line(x,66,x,62)
+        x+=sum;
+      }
+
       //Puesto
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
@@ -177,7 +235,13 @@ const convertToJson = () => {
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.text(valores.value[i].rfc, 11,102);
+      let xRFC = 20
+      doc.line(15,98,15,103);
+      for (let index = 0; index < 13; index++) {
+        doc.line(xRFC,98,xRFC,103)
+        doc.text(valores.value[i].rfc[index], xRFC-3.4,102);
+        xRFC+=5
+      }
       //Nombre del Curso
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
@@ -215,17 +279,60 @@ const convertToJson = () => {
       doc.text('Dia', 130, 123);
       doc.text('a', 143, 128);
       doc.text('Año', 160, 123);
-      doc.text('Mes', 179, 123);
+      doc.text('Mes', 178.5, 123);
       doc.text('Dia', 192, 123);
       //Fechas
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.text(valores.value[i].fecha_inicio.getFullYear().toString(), 97, 128);
-      doc.text((valores.value[i].fecha_inicio.getMonth()+1).toString(), 117, 128);
-      doc.text((valores.value[i].fecha_inicio.getDate()+1).toString(), 130, 128);
-      doc.text(valores.value[i].fecha_termino.getFullYear().toString(), 158, 128);
-      doc.text((valores.value[i].fecha_termino.getMonth()+1).toString(), 179, 128);
-      doc.text((valores.value[i].fecha_termino.getDate()+1).toString(), 192, 128);
+      x=88
+      let xDFin = 149
+      for (let index = 0; index < 4; index++) {
+        doc.text(valores.value[i].fecha_inicio.getFullYear().toString()[index], x+2.5, 128.5);
+        doc.text(valores.value[i].fecha_termino.getFullYear().toString()[index], xDFin+2.5, 128.5);
+
+        doc.line(x,130,x,125)
+        doc.line(xDFin,130,xDFin,125)
+        xDFin += 6.25
+        x+=6.25
+      }
+      x=119.5
+      xDFin = 180.5
+      for (let index = 0; index < 2; index++) {
+
+        if(index == 0 && (valores.value[i].fecha_inicio.getMonth()+1).toString().length == 1) {
+          doc.line(x,130,x,125)
+          doc.text('0', x-4, 128.5);
+        } else{
+          doc.text((valores.value[i].fecha_inicio.getMonth()+1).toString(), x-1, 128.5);
+        }
+
+        if(index == 0 && (valores.value[i].fecha_termino.getMonth()+1).toString().length == 1){
+          doc.line(xDFin,130,xDFin,125)
+          doc.text('0', xDFin-4, 128.5);
+        }else{
+          doc.text((valores.value[i].fecha_termino.getMonth()+1).toString(), xDFin+2.5, 128.5);
+        }
+        x+=3.25
+      }
+
+      doc.line(132,130,132,125)
+      if((valores.value[i].fecha_inicio.getDate()+1).toString().length == 0){
+        doc.text('0',128,128)
+        doc.text((valores.value[i].fecha_inicio.getDate()+1).toString(), 130, 128);
+      }else{
+        doc.text((valores.value[i].fecha_termino.getDate()+1).toString()[0],128,128.5)
+        doc.text((valores.value[i].fecha_termino.getDate()+1).toString()[1],134.5, 128.5);
+      }
+
+      doc.line(193.5,130,193.5,125)
+      if((valores.value[i].fecha_termino.getDate()+1).toString().length == 0){
+        doc.text('0',190.25,128.5)
+        doc.text((valores.value[i].fecha_termino.getDate()+1).toString(), 196.75, 128.5);
+      }else{
+        doc.text((valores.value[i].fecha_termino.getDate()+1).toString()[0],189.25,128.5)
+        doc.text((valores.value[i].fecha_termino.getDate()+1).toString()[1],196, 128.5);
+      }
+
       //Area Tematica curso
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
@@ -245,8 +352,8 @@ const convertToJson = () => {
       //Area tematica curso datos
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.text(datos.capacitador.toUpperCase(), 11, 148);
-      doc.text(datos.acestps.toUpperCase(), 98, 148);
+      doc.text(capacitador.value.toUpperCase(), 11, 148);
+      doc.text(acestps.value.toUpperCase(), 98, 148);
       //Informacion de firmas
       doc.setFontSize(6.6);
       
@@ -260,17 +367,17 @@ const convertToJson = () => {
       doc.setFontSize(7);
       doc.text("Instructor o Tutor", 33 ,170);
 
-      doc.text(" Patrón o representante legal", 85 ,170);
+      doc.text("Patrón o representante legal", 85 ,170);
 
       doc.text("Representante de los trabajadores", 144 ,170);
 
       doc.setFontSize(6);
       doc.setFont('helvetica', 'bold')
-      doc.text("TSIN. DAVID AVILA GARCIA", 28 ,190);
+      doc.text(instructor.value.toUpperCase(), 28 ,190);
       doc.line(20,192,65,192)
-      doc.text("LIC. MARIA ELENA MEDINA GONZALEZ", 82 ,190);
+      doc.text(replegal.value.toUpperCase(), 82 ,190);
       doc.line(75,192,130,192)
-      doc.text("LIC. VERÓNICA ZEPEDA USCANGA", 145 ,190);
+      doc.text(pretrabajador.value.toUpperCase(), 145 ,190);
       doc.line(140,192,186,192)
 
       if (i !== valores.value.length - 1) {
@@ -279,7 +386,8 @@ const convertToJson = () => {
     }
   const pdfBase64 = doc.output('datauristring');
   document.querySelector('iframe').src = pdfBase64;
-};
+  
+}
 
 function gethalf(texto,fontsize,docWidth, scale){
   var textWidth = texto * fontsize / scale;
