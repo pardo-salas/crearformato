@@ -43,6 +43,7 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
@@ -55,13 +56,6 @@ button:focus-visible {
   padding: 2em;
 }
 
-footer {
-  height: 50px; /* Ajusta el valor de acuerdo al tamaño deseado para el footer */
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-}
 
 html, body {
   height: 100%;
