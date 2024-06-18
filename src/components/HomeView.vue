@@ -9,8 +9,8 @@
   </div>
 
     <div class="flex flex-col justify-center items-center my-8 w-full">
-      <div class="flex flex-col gap-2 m-2 p-2">
-        <div class="flex">
+      <div class="flex flex-col gap-2 p-2">
+        <div class="flex justify-center">
           <div class="flex flex-col justify-center items-center">
             <label>Ingresar Base de Datos</label>
             <input id="fileXLS" type="file" @change="handleFileUpload" accept=".xls,.xlsx">
@@ -27,37 +27,39 @@
   
           </div>
         </div>
-        <!-- Ocupacion -->
-        <div class="grid grid-cols-1 items-start">
-          <label for="ocupacion">Ocupacion: </label>
-          <input type="text" name="ocupacion" v-model="ocupacion" id="ocupacion">
+        <div class="mx-auto">
+          <!-- Ocupacion -->
+          <div class="grid grid-cols-1 items-start">
+            <label for="ocupacion">Ocupacion: </label>
+            <input type="text" name="ocupacion" v-model="ocupacion" id="ocupacion">
+          </div>
+          <!-- Capacitador -->
+          <div class="grid grid-cols-1 items-start">
+            <label for="capacitador">Capacitador: </label>
+            <input type="text" name="capacitador" v-model="capacitador" id="capacitador">
+          </div>
+          <!-- REGISTRO ACE STPS -->
+          <div class="grid grid-cols-1 items-start">
+            <label for="acestps">Registro ACE STPS: </label>
+            <input type="text" name="acestps" mask="000-00 00 00" v-model="acestps" id="acestps">
+          </div>
+          <!-- Instructor o Tutor -->
+          <div class="grid grid-cols-1 items-start">
+            <label for="instructor">Instructor o Tutor: </label>
+            <input type="text" name="instructor" v-model="instructor" id="instructor">
+          </div>
+          <!-- Patron o representante legal -->
+          <div class="grid grid-cols-1 items-start">
+            <label for="replegal">Patron o representante legal: </label>
+            <input type="text" name="replegal" v-model="replegal" id="replegal">
+          </div>
+          <!-- Representante de los trabajadores -->
+          <div class="grid grid-cols-1 items-start">
+            <label for="pretrabajador">Representante de los trabajadores: </label>
+            <input type="text" name="pretrabajador" v-model="pretrabajador" id="pretrabajador">
+          </div>
         </div>
-        <!-- Capacitador -->
-        <div class="grid grid-cols-1 items-start">
-          <label for="capacitador">Capacitador: </label>
-          <input type="text" name="capacitador" v-model="capacitador" id="capacitador">
-        </div>
-        <!-- REGISTRO ACE STPS -->
-        <div class="grid grid-cols-1 items-start">
-          <label for="acestps">Registro ACE STPS: </label>
-          <input type="text" name="acestps" v-model="acestps" id="acestps">
-        </div>
-        <!-- Instructor o Tutor -->
-        <div class="grid grid-cols-1 items-start">
-          <label for="instructor">Instructor o Tutor: </label>
-          <input type="text" name="instructor" v-model="instructor" id="instructor">
-        </div>
-        <!-- Patron o representante legal -->
-        <div class="grid grid-cols-1 items-start">
-          <label for="replegal">Patron o representante legal: </label>
-          <input type="text" name="replegal" v-model="replegal" id="replegal">
-        </div>
-        <!-- Representante de los trabajadores -->
-        <div class="grid grid-cols-1 items-start">
-          <label for="pretrabajador">Representante de los trabajadores: </label>
-          <input type="text" name="pretrabajador" v-model="pretrabajador" id="pretrabajador">
-        </div>
-      </div>
+    </div>
 
       <div class="p-4 flex" v-if="valores.length">
         <iframe  ref="pdfPreview" width="500" height="500"></iframe>
@@ -122,6 +124,11 @@ const handleFileChange = (index) => {
     }
   }
 };
+
+const meses = [
+  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
+  'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+];
 
 const convertToJson = () => {
   const doc = new jsPDF();
@@ -401,6 +408,8 @@ const convertToJson = () => {
     for (let index = 0; index < registroContancia.length; index++) {
       docCons.addImage("img/header.jpg",0,0,docCons.internal.pageSize.getWidth(),50)
       docCons.addImage(imagen2,20,150,40,40)
+      docCons.setFontSize(12);
+      docCons.text("folio",226,198)
       docCons.addImage("img/qr.jpg",230,150,40,40)
 
       let texto ="Se expide la presente constancia"
@@ -461,7 +470,11 @@ const convertToJson = () => {
       docCons.setFont('helvetica', 'normal');
       docCons.setTextColor(0, 0, 0);
       docCons.setFontSize(18);
-      texto = "Impartido en Veracruz, Veracruz, el 11 de abril del 2024"
+
+      const dia = registroContancia[index].fecha_inicio.getDate() +1;
+      const mes = meses[registroContancia[index].fecha_inicio.getMonth()];
+      const anio =registroContancia[index].fecha_inicio.getFullYear();
+      texto = `Impartido en Veracruz, Veracruz, el ${dia} de ${mes} del ${anio}`
       fontSize=18
       docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),126)
 
@@ -487,6 +500,9 @@ const convertToJson = () => {
       const iframe = document.getElementById('pdfConstancia');
       const pdfBase64 = docCons.output('datauristring');
       iframe.src = pdfBase64
+      if (index !== registroContancia.length - 1) {
+        docCons.addPage(); // Agregar una nueva página si se alcanza el límite de la página actual y no es el último objeto
+    }
     }
 
   }
