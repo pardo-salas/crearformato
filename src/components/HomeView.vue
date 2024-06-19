@@ -10,6 +10,7 @@
 
     <div class="flex flex-col justify-center items-center my-8 w-full">
       <div class="flex flex-col gap-2 p-2">
+        <!-- Inputs  -->
         <div class="flex justify-center">
           <div class="flex flex-col justify-center items-center">
             <label>Ingresar Base de Datos</label>
@@ -27,36 +28,60 @@
   
           </div>
         </div>
-        <div class="mx-auto">
-          <!-- Ocupacion -->
-          <div class="grid grid-cols-1 items-start">
-            <label for="ocupacion">Ocupacion: </label>
-            <input type="text" name="ocupacion" v-model="ocupacion" id="ocupacion">
+        <!-- Formulario -->
+        <div class="flex flex-col mx-auto p-2 w-full justify-center items-center">
+          <div class="grid grid-cols-4 gap-4 w-full">
+            <!-- Razon Social -->
+            <div class="col-span-2 grid grid-cols-1 items-start">
+              <label for="razon_social">Razon Social: </label>
+              <input type="text" name="razon_social" v-model="razon_social" id="razon_social">
+            </div>
+            <!-- RFC -->
+            <div class="col-span-2 grid grid-cols-1 items-start">
+              <label for="RFC">RFC: </label>
+              <input type="text" name="RFC" v-model="rfc" id="RFC">
+            </div>
           </div>
-          <!-- Capacitador -->
-          <div class="grid grid-cols-1 items-start">
-            <label for="capacitador">Capacitador: </label>
-            <input type="text" name="capacitador" v-model="capacitador" id="capacitador">
+          <div class="grid grid-cols-4 gap-4 w-full">
+            <!-- Ocupacion -->
+            <div class="col-span-2 grid grid-cols-1 items-start">
+              <label for="ocupacion">Ocupacion: </label>
+              <input type="text" name="ocupacion" v-model="ocupacion" id="ocupacion">
+            </div>
+            <!-- Capacitador -->
+            <div class="col-span-2 grid grid-cols-1 items-start">
+              <label for="capacitador">Capacitador: </label>
+              <input type="text" name="capacitador" v-model="capacitador" id="capacitador">
+            </div>
           </div>
-          <!-- REGISTRO ACE STPS -->
-          <div class="grid grid-cols-1 items-start">
-            <label for="acestps">Registro ACE STPS: </label>
-            <input type="text" name="acestps" mask="000-00 00 00" v-model="acestps" id="acestps">
+          <div class="grid grid-cols-4 gap-4 w-full">
+            <!-- REGISTRO ACE STPS -->
+            <div class="col-span-2 grid grid-cols-1 items-start">
+              <label for="acestps">Registro ACE STPS: </label>
+              <input type="text" name="acestps" mask="000-00 00 00" v-model="acestps" id="acestps">
+            </div>
+            <!-- Instructor o Tutor -->
+            <div class="col-span-2 grid grid-cols-1 items-start">
+              <label for="instructor">Instructor o Tutor: </label>
+              <input type="text" name="instructor" v-model="instructor" id="instructor">
+            </div>
           </div>
-          <!-- Instructor o Tutor -->
-          <div class="grid grid-cols-1 items-start">
-            <label for="instructor">Instructor o Tutor: </label>
-            <input type="text" name="instructor" v-model="instructor" id="instructor">
+          <div class="grid grid-cols-4 gap-4 w-full">
+            <!-- Patron o representante legal -->
+            <div class="col-span-2 grid grid-cols-1 items-start">
+              <label for="replegal">Patron o representante legal: </label>
+              <input type="text" name="replegal" v-model="replegal" id="replegal">
+            </div>
+            <!-- Representante de los trabajadores -->
+            <div class="col-span-2 grid grid-cols-1 items-start">
+              <label for="pretrabajador">Representante de los trabajadores: </label>
+              <input type="text" name="pretrabajador" v-model="pretrabajador" id="pretrabajador">
+            </div>
           </div>
-          <!-- Patron o representante legal -->
-          <div class="grid grid-cols-1 items-start">
-            <label for="replegal">Patron o representante legal: </label>
-            <input type="text" name="replegal" v-model="replegal" id="replegal">
-          </div>
-          <!-- Representante de los trabajadores -->
-          <div class="grid grid-cols-1 items-start">
-            <label for="pretrabajador">Representante de los trabajadores: </label>
-            <input type="text" name="pretrabajador" v-model="pretrabajador" id="pretrabajador">
+          <!-- Folio -->
+          <div class="w-72 grid grid-cols-1 items-start">
+            <label for="folio">Folio: </label>
+            <input type="text" name="folio" v-model="folio" id="folio">
           </div>
         </div>
     </div>
@@ -73,6 +98,9 @@ import { onMounted, ref } from 'vue';
 import readXlsxFile from 'read-excel-file';
 import jsPDF from 'jspdf';
 
+let folio = ref("")
+let rfc =ref("");
+let razon_social = ref("");
 let ocupacion = ref("");
 let capacitador= ref("");
 let acestps = ref("")
@@ -139,6 +167,7 @@ const convertToJson = () => {
   let imagen2 = imgLogo2.value == null ? "/img/curso.jpg" : imgLogo2.value
   let registroContancia = []
   let registroCredencial
+  //Crear Formatos
   for (let i = 0; i < valores.value.length; i++) {
     if (valores.value[i]["constancia"]) {
       registroContancia.push(valores.value[i])
@@ -242,7 +271,7 @@ const convertToJson = () => {
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
-    doc.text(valores.value[i].razon_social, 11,91);
+    doc.text(razon_social.value, 11,91);
     //Registro federal Contribuyentes
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'normal');
@@ -254,9 +283,9 @@ const convertToJson = () => {
     doc.setFontSize(10);
     let xRFC = 20
     doc.line(15,98,15,103);
-    for (let index = 0; index < 13; index++) {
+    for (let index = 0; index < 14; index++) {
       doc.line(xRFC,98,xRFC,103)
-      doc.text(valores.value[i].rfc[index], xRFC-3.4,102);
+      doc.text(rfc.value[index], xRFC-3.4,102);
       xRFC+=5
     }
     //Nombre del Curso
@@ -396,20 +425,24 @@ const convertToJson = () => {
     doc.line(75,192,130,192)
     doc.text(pretrabajador.value.toUpperCase(), gethalf(doc.getStringUnitWidth(replegal.value),6,55,scaleFactor)+140 ,190);
     doc.line(140,192,186,192)
-
+    
+    const folioCreated =folio.value+"-"+String(i+1).padStart(3, '0');
+    doc.text("folio: "+folioCreated,175,210)
+    valores.value[i].folio = folioCreated
     if (i !== valores.value.length - 1) {
       doc.addPage(); // Agregar una nueva página si se alcanza el límite de la página actual y no es el último objeto
     }
   }
   const pdfBase64 = doc.output('datauristring');
   document.querySelector('iframe').src = pdfBase64;
+  //Crear constancias
   if(registroContancia.length>0){
     const docCons = new jsPDF('landscape');
     for (let index = 0; index < registroContancia.length; index++) {
       docCons.addImage("img/header.jpg",0,0,docCons.internal.pageSize.getWidth(),50)
       docCons.addImage(imagen2,20,150,40,40)
       docCons.setFontSize(12);
-      docCons.text("folio",226,198)
+      docCons.text("folio:"+registroContancia[index].folio,226,198)
       docCons.addImage("img/qr.jpg",230,150,40,40)
 
       let texto ="Se expide la presente constancia"
