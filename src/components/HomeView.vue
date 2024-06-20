@@ -75,18 +75,21 @@
               <input type="text" name="pretrabajador" v-model="pretrabajador" id="pretrabajador">
             </div>
           </div>
-          <!-- Folio -->
           <div class="grid grid-cols-4 gap-4 w-full">
             <!-- Patron o representante legal -->
             <div class="col-span-2 grid grid-cols-1 items-start">
               <label for="curso">Curso: </label>
               <input type="text" name="curso" v-model="curso" id="curso">
             </div>
-            <!-- Patron o representante legal -->
+            <!-- Folio -->
             <div class="col-span-2 grid grid-cols-1 items-start">
-              <label for="folio">Folio: </label>
-              <input type="text" name="folio" v-model="folio" id="replegal">
+              <label for="area">Area: </label>
+              <input type="text" name="area" v-model="area" id="area">
             </div>
+          </div>
+          <div class="grid grid-cols-1 w-60 mt-2 ">
+            <label for="folio">Folio: </label>
+            <input type="text" name="folio" v-model="folio" id="replegal">
           </div>
         </div>
       </div>
@@ -104,6 +107,7 @@ import {mask} from 'vue-the-mask'
 
 import jsPDF from 'jspdf';
 
+let area = ref("")
 let folio = ref("")
 let rfc =ref("");
 let razon_social = ref("");
@@ -394,7 +398,7 @@ const convertToJson = () => {
     //Area tematica curso datos
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
-    doc.text(valores.value[i].area.toUpperCase(), 11, 138);
+    doc.text(area.value.toUpperCase(), 11, 138);
     //Capacitador
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'normal');
@@ -470,7 +474,7 @@ const convertToJson = () => {
       docCons.setFont('helvetica', 'bold');
       docCons.setTextColor(0, 0, 128);
       docCons.setFontSize(35);
-      texto = registroContancia[index].nombre
+      texto = registroContancia[index].nombre.toUpperCase()
       fontSize=35
       docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),70)
 
