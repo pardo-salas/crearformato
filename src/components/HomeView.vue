@@ -39,7 +39,7 @@
             <!-- RFC -->
             <div class="col-span-2 grid grid-cols-1 items-start">
               <label for="RFC">RFC: </label>
-              <input type="text" name="RFC" v-model="rfc" id="RFC">
+              <input type="text" v-mask="'AAA-######-AA#'"  name="RFC" v-model="rfc" id="RFC">
             </div>
           </div>
           <div class="grid grid-cols-4 gap-4 w-full">
@@ -84,8 +84,7 @@
             <input type="text" name="folio" v-model="folio" id="folio">
           </div>
         </div>
-    </div>
-
+      </div>
       <div class="p-4 flex" v-if="valores.length">
         <iframe  ref="pdfPreview" width="500" height="500"></iframe>
         <iframe id="pdfConstancia" ref="pdfPreview" width="500" height="500"></iframe>
@@ -96,6 +95,8 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import readXlsxFile from 'read-excel-file';
+import {mask} from 'vue-the-mask'
+
 import jsPDF from 'jspdf';
 
 let folio = ref("")

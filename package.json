@@ -13,6 +13,7 @@
     "jspdf": "^2.5.1",
     "read-excel-file": "^5.8.1",
     "vue": "^3.4.21",
+    "vue-the-mask": "^0.11.1",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
