@@ -24,9 +24,6 @@
             <label>Ingresar Logo Curso</label>
             <input id="fileImg" ref="imageInput2" @change="handleFileChange(2)" type="file" accept=".jpg,.png">
           </div>
-          <div class="flex flex-col justify-center items-center">
-  
-          </div>
         </div>
         <!-- Formulario -->
         <div class="flex flex-col mx-auto p-2 w-full justify-center items-center">
@@ -79,9 +76,17 @@
             </div>
           </div>
           <!-- Folio -->
-          <div class="w-72 grid grid-cols-1 items-start">
-            <label for="folio">Folio: </label>
-            <input type="text" name="folio" v-model="folio" id="folio">
+          <div class="grid grid-cols-4 gap-4 w-full">
+            <!-- Patron o representante legal -->
+            <div class="col-span-2 grid grid-cols-1 items-start">
+              <label for="curso">Curso: </label>
+              <input type="text" name="curso" v-model="curso" id="curso">
+            </div>
+            <!-- Patron o representante legal -->
+            <div class="col-span-2 grid grid-cols-1 items-start">
+              <label for="folio">Folio: </label>
+              <input type="text" name="folio" v-model="folio" id="replegal">
+            </div>
           </div>
         </div>
       </div>
@@ -108,6 +113,7 @@ let acestps = ref("")
 let instructor = ref("")
 let replegal = ref("")
 let pretrabajador = ref("")
+let curso = ref("")
 
 let imgLogo = ref(null);
 let imgLogo2 = ref(null);
@@ -298,7 +304,7 @@ const convertToJson = () => {
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
-    doc.text(valores.value[i].curso, gethalf(doc.getStringUnitWidth(valores.value[i].curso),10,docWidth-1,scaleFactor), 118);
+    doc.text(curso.value, gethalf(doc.getStringUnitWidth(curso.value),10,docWidth-1,scaleFactor), 118);
     // Duracion en horas
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'normal');
@@ -478,11 +484,11 @@ const convertToJson = () => {
       docCons.setFont('helvetica', 'bold');
       docCons.setTextColor(38, 32, 72);
       docCons.setFontSize(38);
-      texto = registroContancia[index].curso 
+      texto = curso.value
       fontSize=38
-      if(registroContancia[index].curso.length >30 ){
-        let primeraMitad = registroContancia[index].curso.slice(0, 30);
-        let segundaMitad = registroContancia[index].curso.slice(30);
+      if(curso.value.length >30 ){
+        let primeraMitad = curso.value.slice(0, 30);
+        let segundaMitad = curso.value.slice(30);
         if (texto.charAt(30) !== ' ' && texto.charAt(30 - 1) !== ' ') {
           const espacioAnterior = primeraMitad.lastIndexOf(' ');
           const espacioSiguiente = segundaMitad.indexOf(' ');
