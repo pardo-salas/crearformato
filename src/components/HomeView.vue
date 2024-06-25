@@ -462,9 +462,9 @@ const convertToJson = () => {
   
     
     const folioCreated =folioArray[0]+"-"+folioArray[1]+"-"+consecutivo.padStart(3, '0');
-    doc.text("folio: ",170,210)
+    doc.text("folio: ",170,205)
     doc.setTextColor(255,0,0);
-    doc.text(folioCreated,177,210)
+    doc.text(folioCreated,177,205)
     consecutivo++
     valores.value[i].folio = folioCreated
     if (i !== valores.value.length - 1) {
