@@ -178,6 +178,9 @@ const convertToJson = () => {
   let imagen2 = imgLogo2.value == null ? "/img/curso.jpg" : imgLogo2.value
   let registroContancia = []
   let registroCredencial
+  const folioArray = folio.value.split('-');
+  let consecutivo = folioArray[2].replace(/^0+/, '');
+
   //Crear Formatos
   for (let i = 0; i < valores.value.length; i++) {
     if (valores.value[i]["constancia"]== true) {
@@ -244,7 +247,7 @@ const convertToJson = () => {
     //Dato ocupacion
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
+    doc.setFontSize(11);
     doc.text(ocupacion.value,(doc.internal.pageSize.getWidth()/2)+2,64)
     //Curp
     doc.setTextColor(0, 0, 0);
@@ -307,8 +310,8 @@ const convertToJson = () => {
     //Datos del curso
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.text(curso.value, gethalf(doc.getStringUnitWidth(curso.value),10,docWidth-1,scaleFactor), 118);
+    doc.setFontSize(12);
+    doc.text(curso.value, gethalf(doc.getStringUnitWidth(curso.value),12,docWidth-1,scaleFactor), 118);
     // Duracion en horas
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'normal');
@@ -361,27 +364,26 @@ const convertToJson = () => {
       doc.text('0', 114, 128.5);
       doc.text((valores.value[i].fecha_inicio.getMonth()+1).toString(), 121.5, 128.5);
     } else{
-      doc.text((valores.value[i].fecha_inicio.getMonth()+1).toString()[0], 114, 128.5);
+      doc.text((valores.value[i].fecha_inicio.getMonth()+1).toString()[0], 115.5, 128.5);
       doc.text((valores.value[i].fecha_inicio.getMonth()+1).toString()[1], 121.5, 128.5);
     }
 
     doc.line(180.5,130,180.5,125)
-    // console.log((valores.value[i].fecha_termino.getMonth()).toString().length)
     if((valores.value[i].fecha_termino.getMonth()+1).toString().length == 1){
-      doc.text('0', 180.5-4, 128.5);
-      doc.text((valores.value[i].fecha_termino.getMonth()+1).toString(), 180.5, 128.5);
+      doc.text('0', 176.5, 128.5);
+      doc.text((valores.value[i].fecha_termino.getMonth()+1).toString(), 182.5, 128.5);
     }else{
       doc.text((valores.value[i].fecha_termino.getMonth()+1).toString()[0], 176.5, 128.5);
-      // doc.text((valores.value[i].fecha_termino.getMonth()).toString()[1], 182.5, 128.5);
+      doc.text((valores.value[i].fecha_termino.getMonth()+1).toString()[1], 182.5, 128.5);
     }
     //Dias
     doc.line(132,130,132,125)
     if((valores.value[i].fecha_inicio.getDate()).toString().length == 1){
       doc.text('0',128,128)
-      doc.text((valores.value[i].fecha_inicio.getDate()).toString(), 130, 128);
+      doc.text((valores.value[i].fecha_inicio.getDate()+1).toString(), 130, 128);
     }else{
-      doc.text((valores.value[i].fecha_termino.getDate()).toString()[0],128,128.5)
-      doc.text((valores.value[i].fecha_termino.getDate()).toString()[1],134.5, 128.5);
+      doc.text((valores.value[i].fecha_inicio.getDate()+1).toString()[0],128,128.5)
+      doc.text((valores.value[i].fecha_inicio.getDate()+1).toString()[1],134.5, 128.5);
     }
 
     doc.line(193.5,130,193.5,125)
@@ -389,8 +391,8 @@ const convertToJson = () => {
       doc.text('0',190.25,128.5)
       doc.text((valores.value[i].fecha_termino.getDate()).toString(), 196.75, 128.5);
     }else{
-      doc.text((valores.value[i].fecha_termino.getDate()).toString()[0],189.25,128.5)
-      doc.text((valores.value[i].fecha_termino.getDate()).toString()[1],196, 128.5);
+      doc.text((valores.value[i].fecha_termino.getDate()+1).toString()[0],189.25,128.5)
+      doc.text((valores.value[i].fecha_termino.getDate()+1).toString()[1],196, 128.5);
     }
 
     //Area Tematica curso
@@ -441,26 +443,29 @@ const convertToJson = () => {
     doc.line(75,192,130,192)
     doc.text(pretrabajador.value.toUpperCase(), gethalf(doc.getStringUnitWidth(replegal.value),6,55,scaleFactor)+140 ,190);
     doc.line(140,192,186,192)
-    
+
+    doc.setFontSize(10.5);
     doc.text('INSTRUCCIONES',10,210);
-    doc.setFontSize(4);
+    doc.setFontSize(8);
     doc.setFont('helvetica', 'normal')
     doc.text('- Llenar a máquina o con letra de molde.',10,215)
-    doc.text('- Deberá entregarse al trabajador dentro de los veinte días hábiles siguientes al término del curso de capacitación aprobado.',10,217)
-    doc.text('1/   Las áreas y subáreas ocupacionales del Catálogo Nacional de Ocupaciones se encuentran disponibles en el reverso de este formato y en la página www.stps.gob.mx',20,219)
-    doc.text('2/    Las áreas temáticas de los cursos se encuentran disponibles en el reverso de este formato y en la página www.stps.gob.mx',10,221);
-    doc.text('3/    Cursos impartidos por el área competente de la Secretaria del Trabajo y Previsión Social.',10,223)
-    doc.text('4/    Para empresas con menos de 51 trabajadores. Para empresas con más de 50 trabajadores firmaría el representante del patrón ante la Comisión mixta de capacitación, adiestramiento y productividad.',10,225)
-    doc.text('5/    Solo para empresas con más de 50 trabajadores.',10,227);
-    doc.text('* Dato no obligatorio.',10,229)					
+    doc.text('- Deberá entregarse al trabajador dentro de los veinte días hábiles siguientes al término del curso de capacitación aprobado.',10,218)
+    doc.text('1/   Las áreas y subáreas ocupacionales del Catálogo Nacional de Ocupaciones se encuentran disponibles en el reverso de este formato',10,221)
+    doc.text('y en la página www.stps.gob.mx',10,224);
 
-
-
-
-    const folioCreated =folio.value+"-"+String(i+1).padStart(3, '0');
-    doc.text("folio: ",175,210)
+    doc.text('2/   Las áreas temáticas de los cursos se encuentran disponibles en el reverso de este formato y en la página www.stps.gob.mx',10,227);
+    doc.text('3/   Cursos impartidos por el área competente de la Secretaria del Trabajo y Previsión Social.',10,230)
+    doc.text('4/   Para empresas con menos de 51 trabajadores. Para empresas con más de 50 trabajadores firmaría el representante del patrón ante la ',10,233)
+    doc.text('Comisión mixta de capacitación, adiestramiento y productividad.',10,236)
+    doc.text('5/   Solo para empresas con más de 50 trabajadores.',10,239);
+    doc.text('* Dato no obligatorio.',10,242)					
+  
+    
+    const folioCreated =folioArray[0]+"-"+folioArray[1]+"-"+consecutivo.padStart(3, '0');
+    doc.text("folio: ",170,210)
     doc.setTextColor(255,0,0);
-    doc.text(folioCreated,179,210)
+    doc.text(folioCreated,177,210)
+    consecutivo++
     valores.value[i].folio = folioCreated
     if (i !== valores.value.length - 1) {
       doc.addPage(); // Agregar una nueva página si se alcanza el límite de la página actual y no es el último objeto
