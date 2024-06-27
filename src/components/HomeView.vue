@@ -460,8 +460,7 @@ const convertToJson = () => {
     doc.text('5/   Solo para empresas con más de 50 trabajadores.',10,239);
     doc.text('* Dato no obligatorio.',10,242)					
   
-    
-    const folioCreated =folioArray[0]+"-"+folioArray[1]+"-"+consecutivo.padStart(3, '0');
+    const folioCreated =folioArray[0]+"-"+folioArray[1]+"-"+consecutivo.toString().padStart(3, '0');
     doc.text("folio: ",170,205)
     doc.setTextColor(255,0,0);
     doc.text(folioCreated,177,205)
