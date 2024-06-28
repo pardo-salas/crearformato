@@ -186,7 +186,7 @@ const convertToJson = () => {
     if (valores.value[i]["constancia"]== true) {
       registroContancia.push(valores.value[i])
     }  
-    doc.addImage(imagen1,10,0,90,30)
+    doc.addImage(imagen1,10,5,75,18)
     doc.addImage(imagen2,170,0,30,30)
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(14);
