@@ -216,8 +216,8 @@ const convertToJson = () => {
     doc.text('Nombre (Anotar apellido paterno, apellido materno y nombre (s))', 11,50); // Dibujar texto dentro del rectángulo
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.text(valores.value[i].nombre.toUpperCase(), gethalf(doc.getStringUnitWidth(valores.value[i].nombre),14,docWidth-20,scaleFactor),55);
+    doc.setFontSize(10);
+    doc.text(valores.value[i].nombre.toUpperCase(), gethalf(doc.getStringUnitWidth(valores.value[i].nombre),10,docWidth-20,scaleFactor),55);
 
     //Rectangulos del curp y ocupacion
     doc.rect(10,56, (doc.internal.pageSize.getWidth()/2)-10,10) //Rectangulo CURP
@@ -461,7 +461,7 @@ const convertToJson = () => {
     doc.text('* Dato no obligatorio.',10,242)					
   
     const folioCreated =folioArray[0]+"-"+folioArray[1]+"-"+consecutivo.toString().padStart(3, '0');
-    doc.text("folio: ",170,205)
+    doc.text("Folio: ",170,205)
     doc.setTextColor(255,0,0);
     doc.text(folioCreated,177,205)
     consecutivo++
@@ -469,6 +469,8 @@ const convertToJson = () => {
     if (i !== valores.value.length - 1) {
       doc.addPage(); // Agregar una nueva página si se alcanza el límite de la página actual y no es el último objeto
     }
+    doc.setTextColor(0, 0, 0);
+
   }
   const pdfBase64 = doc.output('datauristring');
   document.querySelector('iframe').src = pdfBase64;
@@ -571,6 +573,7 @@ const convertToJson = () => {
       const iframe = document.getElementById('pdfConstancia');
       const pdfBase64 = docCons.output('datauristring');
       iframe.src = pdfBase64
+
       if (index !== registroContancia.length - 1) {
         docCons.addPage(); // Agregar una nueva página si se alcanza el límite de la página actual y no es el último objeto
     }
