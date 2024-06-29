@@ -2,10 +2,10 @@
   <h1 class="text-white my-8">Generador de Formatos</h1>
   <div class="flex justify-center gap-4">
     <a href="/doc/Plantilla_BaseDatos.xlsx" download>
-      <button>Descargar Plantilla</button>
+      <button >Descargar Plantilla</button>
     </a>
   
-    <button :disabled="!fileSelected" @click="convertToJson">Crear Formato</button>
+    <button :disabled="deshabilitado" @click="convertToJson">Crear Formato</button>
   </div>
 
     <div class="flex flex-col justify-center items-center my-8 w-full">
@@ -124,6 +124,8 @@ let imgLogo2 = ref(null);
 const imageInput1 = ref(null);
 const imageInput2 = ref(null);
 
+const deshabilitado = ref(false)
+
 const valores = ref([]);
 const fileSelected = ref(false)
 
@@ -171,6 +173,7 @@ const meses = [
 
 const convertToJson = () => {
   const doc = new jsPDF();
+  deshabilitado.value = true;
   const docWidth = doc.internal.pageSize.getWidth();
   const scaleFactor =doc.internal.scaleFactor;
   let texto = ""
@@ -181,7 +184,7 @@ const convertToJson = () => {
   const folioArray = folio.value.split('-');
   let consecutivo = folioArray[folioArray.length-1].replace(/^0+/, '');
   
-  let altura = 16.5
+  let altura = 9
   //Crear Formatos
   for (let i = 0; i < valores.value.length; i++) {
     if (valores.value[i]["constancia"]== true) {
@@ -191,8 +194,7 @@ const convertToJson = () => {
     if (valores.value[i]["curp"].length <18){
       alert("esta mal el curp de " + valores.value[i]["nombre"])
     }
-    doc.addImage(imagen1,10,5+altura,75,18)
-    doc.addImage(imagen2,170,0+altura,30,30)
+
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(14);
     doc.text('FORMATO DC-3', doc.internal.pageSize.getWidth() / 2, 30+altura, { align: 'center' });
@@ -364,7 +366,6 @@ const convertToJson = () => {
     xDFin = 180.5
     //Meses
     doc.line(119.5,130+altura,119.5,125+altura)
-    // console.log((valores.value[i].fecha_inicio.getMonth()+1).toString().length == 0)
     if((valores.value[i].fecha_inicio.getMonth()+1).toString().length == 1) {
       doc.text('0', 115, 128.5+altura);
       doc.text((valores.value[i].fecha_inicio.getMonth()+1).toString(), 121.5, 128.5+altura);
@@ -379,13 +380,13 @@ const convertToJson = () => {
       doc.text((valores.value[i].fecha_termino.getMonth()+1).toString(), 182.5, 128.5+altura);
     }else{
       doc.text((valores.value[i].fecha_termino.getMonth()+1).toString()[0], 176.5, 128.5+altura);
-      doc.text((valores.value[i].fecha_termino.getMonth()+1).toString()[1], 182.5, 128.5+altura);
+      doc.text((valores.value[i].fecha_termino.getMonth()+1).toString()[1], 181.5, 128.5+altura);
     }
     //Dias
     doc.line(132,130+altura,132,125+altura)
     if((valores.value[i].fecha_inicio.getDate()).toString().length == 1){
       doc.text('0',128,128+altura)
-      doc.text((valores.value[i].fecha_inicio.getDate()+1).toString(), 130, 128+altura);
+      doc.text((valores.value[i].fecha_inicio.getDate()+1).toString(), 134, 128+altura);
     }else{
       doc.text((valores.value[i].fecha_inicio.getDate()+1).toString()[0],128,128.5+altura)
       doc.text((valores.value[i].fecha_inicio.getDate()+1).toString()[1],134.5, 128.5+altura);
@@ -586,6 +587,8 @@ const convertToJson = () => {
     }
 
   }
+
+  deshabilitado.value = false;
 }
 
 function gethalf(texto,fontsize,docWidth, scale){
@@ -595,86 +598,6 @@ function gethalf(texto,fontsize,docWidth, scale){
   return textX
 }
 
-// onMounted(()=>{
-//     const docCons = new jsPDF('landscape');
-//     docCons.addImage("img/header.jpg",0,0,docCons.internal.pageSize.getWidth(),50)
-//     docCons.addImage("img/curso.jpg",20,150,40,40)
-//     docCons.addImage("img/qr.jpg",230,150,40,40)
-
-//     let texto ="Se expide la presente constancia"
-//     let fontSize = 22;
-
-//     docCons.setFont('helvetica', 'bold');
-//     docCons.setTextColor(255, 255, 255);
-//     docCons.setFontSize(22);
-
-//     docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),34)
-
-//     docCons.setFont('helvetica', 'normal');
-//     docCons.setFontSize(16);
-//     texto = "por su excelente participacion a:"
-//     fontSize=16
-//     docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),44)
-
-//     docCons.setFont('helvetica', 'bold');
-//     docCons.setTextColor(0, 0, 128);
-//     docCons.setFontSize(35);
-//     texto = "Zacarias Aguilar Tapia"
-//     fontSize=35
-//     docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),70)
-
-//     docCons.setFont('helvetica', 'bold');
-//     docCons.setTextColor(30, 30, 120);
-//     docCons.setFontSize(35);
-//     texto = "Zacarias Aguilar Tapia"
-//     fontSize=35
-//     docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),70)
-
-//     docCons.setFont('helvetica', 'normal');
-//     docCons.setTextColor(38, 32, 72);
-//     docCons.setFontSize(18);
-//     texto = "Por haber concluido satisfactoriamente el curso"
-//     fontSize=18
-//     docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),85)
-
-//     docCons.setFont('helvetica', 'bold');
-//     docCons.setTextColor(38, 32, 72);
-//     docCons.setFontSize(38);
-//     texto = "Basico de seguridad Industrial"
-//     fontSize=38
-//     docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),105)
-
-//     docCons.setFont('helvetica', 'normal');
-//     docCons.setTextColor(0, 0, 0);
-//     docCons.setFontSize(18);
-//     texto = "Impartido en Veracruz, Veracruz, el 11 de abril del 2024"
-//     fontSize=18
-//     docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),125)
-
-//     docCons.setFont('helvetica', 'normal');
-//     texto = "con una duracion de 8 horas"
-//     fontSize=18
-//     docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),135)
-
-//     docCons.line(115,170,180,170);
-//     texto = "Ing. David Ávila García"
-//     docCons.setFontSize(8);
-//     fontSize=8
-//     docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),175) 
-
-//     texto = "Instructor"
-//     fontSize=8
-//     docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),180) 
-
-//     texto = "Registro STPS: AIGD-830407-BH2-0005"
-//     fontSize=8
-//     docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),185) 
-
-
-
-//     const pdfBase64 = docCons.output('datauristring');
-//     document.querySelector('iframe').src = pdfBase64;
-// })
 
 function getMidWidht(pagewidth,textWidth){
   return  (pagewidth - textWidth) / 2;
