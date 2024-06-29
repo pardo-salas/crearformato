@@ -5,7 +5,7 @@
       <button >Descargar Plantilla</button>
     </a>
   
-    <button :disabled="deshabilitado" @click="convertToJson">Crear Formato</button>
+    <button :disabled="!fileSelected" @click="convertToJson">Crear Formato</button>
   </div>
 
     <div class="flex flex-col justify-center items-center my-8 w-full">
@@ -177,8 +177,8 @@ const convertToJson = () => {
   const docWidth = doc.internal.pageSize.getWidth();
   const scaleFactor =doc.internal.scaleFactor;
   let texto = ""
-  let imagen1 = imgLogo.value == null ? "/img/logo.jpg" : imgLogo.value
-  let imagen2 = imgLogo2.value == null ? "/img/curso.jpg" : imgLogo2.value
+  let imagen1 = imgLogo.value == null ? "/img/logo.webp" : imgLogo.value
+  let imagen2 = imgLogo2.value == null ? "/img/curso.webp" : imgLogo2.value
   let registroContancia = []
   let registroCredencial
   const folioArray = folio.value.split('-');
@@ -194,13 +194,15 @@ const convertToJson = () => {
     if (valores.value[i]["curp"].length <18){
       alert("esta mal el curp de " + valores.value[i]["nombre"])
     }
-
+    doc.addImage(imagen1,10,8+altura,78,15)
+    doc.addImage(imagen2,150,altura-5,45,35)
+    
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
+    doc.setFontSize(12);
     doc.text('FORMATO DC-3', doc.internal.pageSize.getWidth() / 2, 30+altura, { align: 'center' });
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.text('CONSTANCIA DE COMPETENCIAS O DE HABILIDADES LABORALES', doc.internal.pageSize.getWidth() / 2, 35+altura, { align: 'center' });
+    doc.setFontSize(12);
+    doc.text('CONSTANCIA DE COMPETENCIAS O DE HABILIDADES LABORALES', doc.internal.pageSize.getWidth() / 2, 36+altura, { align: 'center' });
     
     //Rectangulo Encabezado
     doc.setFillColor(0, 0, 0);
@@ -434,10 +436,13 @@ const convertToJson = () => {
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(7);
     doc.text("Instructor o Tutor", 33 ,170+altura);
+    doc.addImage("/img/avila.png",'PNG',27,168+altura,45,35)
     doc.text("Nombre y Firma",35,195+altura)
     doc.text("Patrón o representante legal", 85 ,170+altura);
+    doc.addImage("/img/mariaelena.png",87,168+altura,45,35)
     doc.text("Nombre y Firma",92,195+altura)
     doc.text("Representante de los trabajadores", 144 ,170+altura);
+    doc.addImage("/img/veronica.png",147,168+altura,45,35)
     doc.text("Nombre y Firma",155,195+altura)
 
 
