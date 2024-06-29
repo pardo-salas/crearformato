@@ -179,13 +179,18 @@ const convertToJson = () => {
   let registroContancia = []
   let registroCredencial
   const folioArray = folio.value.split('-');
-  let consecutivo = folioArray[2].replace(/^0+/, '');
-  let altura = 20.5
+  let consecutivo = folioArray[folioArray.length-1].replace(/^0+/, '');
+  
+  let altura = 16.5
   //Crear Formatos
   for (let i = 0; i < valores.value.length; i++) {
     if (valores.value[i]["constancia"]== true) {
       registroContancia.push(valores.value[i])
     }  
+    
+    if (valores.value[i]["curp"].length <18){
+      alert("esta mal el curp de " + valores.value[i]["nombre"])
+    }
     doc.addImage(imagen1,10,5+altura,75,18)
     doc.addImage(imagen2,170,0+altura,30,30)
     doc.setFont('helvetica', 'bold');
@@ -361,7 +366,7 @@ const convertToJson = () => {
     doc.line(119.5,130+altura,119.5,125+altura)
     // console.log((valores.value[i].fecha_inicio.getMonth()+1).toString().length == 0)
     if((valores.value[i].fecha_inicio.getMonth()+1).toString().length == 1) {
-      doc.text('0', 114, 128.5+altura);
+      doc.text('0', 115, 128.5+altura);
       doc.text((valores.value[i].fecha_inicio.getMonth()+1).toString(), 121.5, 128.5+altura);
     } else{
       doc.text((valores.value[i].fecha_inicio.getMonth()+1).toString()[0], 115.5, 128.5+altura);
@@ -473,6 +478,7 @@ const convertToJson = () => {
 
   }
   const pdfBase64 = doc.output('datauristring');
+  doc.save('formato.pdf');
   document.querySelector('iframe').src = pdfBase64;
   //Crear constancias
 
