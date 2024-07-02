@@ -212,18 +212,18 @@ export function usePDFGenerator() {
           }
           //Dias
           doc.line(132,130+altura,132,125+altura)
-          if((registros[i].fecha_inicio.getDate()).toString().length == 1){
-            doc.text('0',128,128+altura)
-            doc.text((registros[i].fecha_inicio.getDate()+1).toString(), 134, 128+altura);
+          if((registros[i].fecha_inicio.getDate()+1).toString().length == 1){
+            doc.text('0',128,128.5+altura)
+            doc.text((registros[i].fecha_inicio.getDate()+1).toString(), 134, 128.5+altura);
           }else{
             doc.text((registros[i].fecha_inicio.getDate()+1).toString()[0],128,128.5+altura)
             doc.text((registros[i].fecha_inicio.getDate()+1).toString()[1],134.5, 128.5+altura);
           }
 
           doc.line(193.5,130+altura,193.5,125+altura)
-          if((registros[i].fecha_termino.getDate()).toString().length == 1){
+          if((registros[i].fecha_termino.getDate()+1).toString().length == 1){
             doc.text('0',190.25,128.5+altura)
-            doc.text((registros[i].fecha_termino.getDate()).toString(), 196.75, 128.5+altura);
+            doc.text((registros[i].fecha_termino.getDate()+1).toString(), 196.75, 128.5+altura);
           }else{
             doc.text((registros[i].fecha_termino.getDate()+1).toString()[0],189.25,128.5+altura)
             doc.text((registros[i].fecha_termino.getDate()+1).toString()[1],196, 128.5+altura);
@@ -262,13 +262,13 @@ export function usePDFGenerator() {
           doc.setFont('helvetica', 'normal')
           doc.setFontSize(7);
           doc.text("Instructor o Tutor", 33 ,170+altura);
-          doc.addImage("/img/avila.png",'PNG',27,168+altura,45,35)
+          doc.addImage("/img/avila.png",'PNG',15,170+altura,60,25)
           doc.text("Nombre y Firma",35,195+altura)
           doc.text("Patrón o representante legal", 85 ,170+altura);
-          doc.addImage("/img/mariaelena.png",87,168+altura,45,35)
+          doc.addImage("/img/mariaelena.png",87,166+altura,30,40)
           doc.text("Nombre y Firma",92,195+altura)
           doc.text("Representante de los trabajadores", 144 ,170+altura);
-          doc.addImage("/img/veronica.png",147,168+altura,45,35)
+          doc.addImage("/img/veronica.png",147,174+altura,30,20)
           doc.text("Nombre y Firma",155,195+altura)
 
 
