@@ -253,7 +253,7 @@ function crearConstancias(){
     docCons.addImage("/img/curso.webp",20,150,40,40)
     docCons.setFontSize(12);
     docCons.text("folio:"+registroContancia[index].folio,226,198)
-    docCons.addImage("img/qr.jpg",230,150,40,40)
+    docCons.addImage("/img/qr.jpg",230,150,40,40)
 
     let texto ="Se expide la presente constancia"
     let fontSize = 22;
