@@ -340,10 +340,6 @@ function crearConstancias(){
     fontSize=8
     docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),185) 
 
-    const iframe = document.getElementById('pdfConstancia');
-    const pdfBase64 = docCons.output('datauristring');
-    iframe.src = pdfBase64
-
     if (index !== registroContancia.length - 1) {
       docCons.addPage(); // Agregar una nueva página si se alcanza el límite de la página actual y no es el último objeto
     }
