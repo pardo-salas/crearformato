@@ -8,7 +8,6 @@ export function usePDFGenerator() {
   async function generatePDF(registros,datos) {
     generatingPDF.value = true;
     try {
-      await new Promise((resolve, reject)=>{
         const doc = new jsPDF();
         const docWidth = doc.internal.pageSize.getWidth();
         const scaleFactor =doc.internal.scaleFactor;
@@ -311,12 +310,158 @@ export function usePDFGenerator() {
         }
 
         doc.save('formato.pdf')
-      })
     } catch (error) {
       console.log(error);
     } finally {
       generatingPDF.value = false;
     }
+  }
+
+  async function generateConstancia(params) {
+    const docCons = new jsPDF('landscape');
+    for (let index = 0; index < registroContancia.length; index++) {
+      docCons.addImage("/img/header.jpg",0,0,docCons.internal.pageSize.getWidth(),50)
+      docCons.addImage("/img/curso.webp",20,150,40,40)
+      docCons.setFontSize(12);
+      docCons.text("folio:"+registroContancia[index].folio,226,198)
+      docCons.addImage("img/qr.jpg",230,150,40,40)
+
+      let texto ="Se expide la presente constancia"
+      let fontSize = 22;
+
+      docCons.setFont('helvetica', 'bold');
+      docCons.setTextColor(255, 255, 255);
+      docCons.setFontSize(22);
+
+      docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),34)
+
+      docCons.setFont('helvetica', 'normal');
+      docCons.setFontSize(16);
+      texto = "por su excelente participacion a:"
+      fontSize=16
+      docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),44)
+
+      docCons.setFont('helvetica', 'bold');
+      docCons.setTextColor(0, 0, 128);
+      docCons.setFontSize(35);
+      texto = registroContancia[index].nombre.toUpperCase()
+      fontSize=35
+      docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),70)
+
+      docCons.setFont('helvetica', 'normal');
+      docCons.setTextColor(38, 32, 72);
+      docCons.setFontSize(18);
+      texto = "Por haber concluido satisfactoriamente el curso"
+      fontSize=18
+      docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),85)
+
+      docCons.setFont('helvetica', 'bold');
+      docCons.setTextColor(38, 32, 72);
+      docCons.setFontSize(38);
+      texto = curso.value
+      fontSize=38
+      if(curso.value.length >30 ){
+        let primeraMitad = curso.value.slice(0, 30);
+        let segundaMitad = curso.value.slice(30);
+        if (texto.charAt(30) !== ' ' && texto.charAt(30 - 1) !== ' ') {
+          const espacioAnterior = primeraMitad.lastIndexOf(' ');
+          const espacioSiguiente = segundaMitad.indexOf(' ');
+          
+          if (espacioAnterior !== -1 && espacioSiguiente !== -1) {
+            primeraMitad = texto.slice(0, 30 + espacioSiguiente);
+            segundaMitad = texto.slice(30 + espacioSiguiente);
+          }
+        }
+        texto = primeraMitad;
+        docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),105)
+        texto = segundaMitad
+        docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),118)
+
+      }else{
+        docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),105)
+      }
+
+      docCons.setFont('helvetica', 'normal');
+      docCons.setTextColor(0, 0, 0);
+      docCons.setFontSize(18);
+
+      const dia = registroContancia[index].fecha_inicio.getDate() +1;
+      const mes = meses[registroContancia[index].fecha_inicio.getMonth()];
+      const anio =registroContancia[index].fecha_inicio.getFullYear();
+      texto = `Impartido en Veracruz, Veracruz, el ${dia} de ${mes} del ${anio}`
+      fontSize=18
+      docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),126)
+
+      docCons.setFont('helvetica', 'normal');
+      texto = "con una duracion de "+registroContancia[index].duracion
+      fontSize=18
+      docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),136)
+
+      docCons.line(115,170,180,170);
+      texto = instructor.value
+      docCons.setFontSize(8);
+      fontSize=8
+      docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),175) 
+
+      texto = "Instructor"
+      fontSize=8
+      docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),180) 
+
+      texto = "Registro STPS: "+acestps.value
+      fontSize=8
+      docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),185) 
+
+      const iframe = document.getElementById('pdfConstancia');
+      const pdfBase64 = docCons.output('datauristring');
+      iframe.src = pdfBase64
+
+      if (index !== registroContancia.length - 1) {
+        docCons.addPage(); // Agregar una nueva página si se alcanza el límite de la página actual y no es el último objeto
+      }
+      docCons.save("constancias");
+    }
+  }
+
+  async function generateCredencial(registros,datos){
+    const doc = new jsPDF({format: [55, 85]});
+    for (let index = 0; index < registros.length; index++) {
+      //Primera Pagina
+      doc.addImage('/img/credencial_frontal.jpg', 'JPG', 0, 0, 55, 85);
+      doc.addImage(registros[index].imagen, 'JPG', 2.6, 31.5, 24, 29.7);
+      doc.addImage('/img/qr.jpg', 'JPG', 4, 63.5, 21, 19);
+      doc.setFont('helvetica', 'bold');
+      let fontSize = 8;
+      let y = 30
+      
+      let texto = datos.curso
+      if (texto.length > 28){
+        fontSize = 5;
+        y=27
+      }
+      doc.setFontSize(fontSize);
+      let curso = doc.splitTextToSize(texto,40)
+      doc.text(4, y,curso);
+      doc.setTextColor(255, 255, 255);
+      let nombre = registros[index].nombre
+      let textLines = doc.splitTextToSize(nombre, 20)
+      doc.text(29,40,textLines);
+      doc.setFontSize(6);
+      doc.text(registros[index].curp,29,56);
+      doc.setFontSize(8);
+      doc.text(datos.folio,29,66);
+      doc.text("19/Abril/2025",29,76);
+      //Segunda pagina
+      doc.addPage();
+      doc.addImage('/img/credencial_trasero.jpg', 'JPG', 0, 0, 55, 85);
+      doc.setFontSize(6);
+      doc.setTextColor(0, 0, 0);
+      let mensaje = doc.splitTextToSize('El portador de esta credencial aprobó satisfactoriamente el '+datos.curso+' de '+registros[index].duracion,48)
+      doc.text(mensaje,5,40);
+  
+      doc.addImage('/img/avila.png', 'PNG', 10, 68, 40, 15);
+    }
+    doc.save('credenciales.pdf');
+
   }
 
   function gethalf(texto,fontsize,docWidth, scale){
@@ -329,5 +474,7 @@ export function usePDFGenerator() {
   return {
     generatingPDF,
     generatePDF,
+    generateConstancia,
+    generateCredencial
   };
 }
