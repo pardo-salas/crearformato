@@ -7,7 +7,7 @@
     </a>
     <button :disabled="!fileSelected" @click="generatingPDF = true,convertToJson()">Crear Formato</button>
     <button v-if="constancia" @click="crearConstancias()">Crear Constancia</button>
-    <!-- <button v-if="credencial" @click="crearCredencial()">Crear Credencial</button> -->
+    <button v-if="credencial" @click="crearCredencial()">Crear Credencial</button>
   </div>
     <div class="flex flex-col justify-center items-center my-8 w-full">
       <div class="flex flex-col gap-2 p-2">
@@ -94,19 +94,18 @@
           </div>
         </div>
       </div>
-      <div class="p-4 flex" v-if="valores.length">
-        <iframe  ref="pdfPreview" width="500" height="500"></iframe>
-        <iframe id="pdfConstancia" ref="pdfPreview" width="500" height="500"></iframe>
+      <div class="p-4 flex">
+        <!-- <iframe  ref="pdfPreview" width="500" height="500"></iframe> -->
+        <!-- <iframe id="pdfConstancia" ref="pdfPreview" width="500" height="500"></iframe> -->
       </div>
     </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import 'vue-loading-overlay/dist/css/index.css';
 import { usePDFGenerator } from '../js/generateConstancia';
 
-const { generatingPDF, generatePDF } = usePDFGenerator();
+const { generatingPDF, generatePDF, generateConstancia ,generateCredencial } = usePDFGenerator();
 
 import readXlsxFile from 'read-excel-file';
 
@@ -200,10 +199,10 @@ function convertToJson()  {
 
   let error = false
   for (let i = 0; i < valores.value.length; i++) {
-    if (valores.value[i]["constancia"]== true) {
+    if (valores.value[i]["constancia"] == true || valores.value[i]["constancia"] == 'true' || valores.value[i]["constancia"] == 'verdadero' ) {
         registroContancia.push(valores.value[i])
       }
-    if(valores.value[i]["credencial"]== true) {
+    if(valores.value[i]["credencial"]== true || valores.value[i]["credencial"] == 'true' || valores.value[i]["credencial"] == 'verdadero') {
       registroCredencial.push(valores.value[i])
       }
     if (valores.value[i]["curp"].length !== 18){
@@ -272,21 +271,21 @@ function crearConstancias(){
     docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),44)
 
     docCons.setFont('helvetica', 'bold');
-    docCons.setTextColor(0, 0, 128);
+    docCons.setTextColor(12, 80, 156);
     docCons.setFontSize(35);
     texto = registroContancia[index].nombre.toUpperCase()
     fontSize=35
     docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),70)
 
     docCons.setFont('helvetica', 'normal');
-    docCons.setTextColor(38, 32, 72);
+    docCons.setTextColor(67, 125, 181);
     docCons.setFontSize(18);
     texto = "Por haber concluido satisfactoriamente el curso"
     fontSize=18
     docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),85)
 
     docCons.setFont('helvetica', 'bold');
-    docCons.setTextColor(38, 32, 72);
+    docCons.setTextColor(67, 125, 181);
     docCons.setFontSize(38);
     texto = curso.value
     fontSize=38
@@ -353,7 +352,19 @@ function crearConstancias(){
 }
 
 function crearCredencial(){
-
+  let data = {
+      folio: folio.value,
+      rfc: rfc.value,
+      razon_social : razon_social.value,
+      ocupacion: ocupacion.value,
+      capacitador :capacitador.value,
+      acestps : acestps.value,
+      instructor :instructor.value,
+      replegal : replegal.value,
+      pretrabajador : pretrabajador.value,
+      curso : curso.value
+    }
+  generateCredencial(registroCredencial,data)
 }
 
 function getMidWidht(pagewidth,textWidth){
