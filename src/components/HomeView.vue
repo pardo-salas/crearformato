@@ -115,15 +115,15 @@ let registroContancia = []
 let registroCredencial = []
 
 let area = ref("")
-let folio = ref("")
-let rfc =ref("");
-let razon_social = ref("");
+let folio = ref("TQR-03/2024-001")
+let rfc =ref("IGC-050407-LA9");
+let razon_social = ref("INDHECA GRUPO CONSTRUCTOR");
 let ocupacion = ref("");
-let capacitador= ref("");
-let acestps = ref("")
-let instructor = ref("")
-let replegal = ref("")
-let pretrabajador = ref("")
+let capacitador= ref("AVILA GARCIA DAVID");
+let acestps = ref("AIGD830407-BH2-0005")
+let instructor = ref("ING. AVILA GARCIA DAVID")
+let replegal = ref("LIC. MARIA ELENA MEDINA GONZALEZ")
+let pretrabajador = ref("LIC. VERÓNICA ZEPEDA USCANGA")
 let curso = ref("")
 
 let imgLogo = ref(null);
@@ -273,9 +273,9 @@ function crearConstancias(){
     docCons.setFont('helvetica', 'bold');
     docCons.setTextColor(12, 80, 156);
     docCons.setFontSize(35);
-    texto = registroContancia[index].nombre.toUpperCase()
+    texto = registroContancia[index].nombre.toLowerCase()
     fontSize=35
-    docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),70)
+    docCons.text(formatoNombre(texto),getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),70)
 
     docCons.setFont('helvetica', 'normal');
     docCons.setTextColor(67, 125, 181);
@@ -362,6 +362,13 @@ function crearCredencial(){
     }
   generateCredencial(registroCredencial,data)
 }
+
+function formatoNombre(cadena) {
+    return cadena.replace(/\b\w/g, function(l) {
+        return l.toUpperCase();
+    });
+}
+
 
 function getMidWidht(pagewidth,textWidth){
     return  (pagewidth - textWidth) / 2;
