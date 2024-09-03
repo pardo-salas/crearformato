@@ -146,8 +146,31 @@ export function usePDFGenerator() {
           doc.setFont('helvetica', 'bold');
           let fontCurso = 12;
           if (curso.value.length > 70) fontCurso = 10
+          if (curso.value.length > 90) fontCurso = 8
           doc.setFontSize(fontCurso);
-          doc.text(curso.value, gethalf(doc.getStringUnitWidth(curso.value),fontCurso,docWidth-1,scaleFactor), 118+altura);
+          texto = curso.value
+          // doc.text(curso.value, gethalf(doc.getStringUnitWidth(curso.value),fontCurso,docWidth-1,scaleFactor), 118+altura);  
+          if(curso.value.length > 80 ){
+            let cursoLength = curso.value.length / 2;
+            let primeraMitad = curso.value.slice(0, cursoLength);
+            let segundaMitad = curso.value.slice(cursoLength);
+            if (texto.charAt(cursoLength) !== ' ' && texto.charAt(cursoLength - 1) !== ' ') {
+              const espacioAnterior = primeraMitad.lastIndexOf(' ');
+              const espacioSiguiente = segundaMitad.indexOf(' ');
+              
+              if (espacioAnterior !== -1 && espacioSiguiente !== -1) {
+                primeraMitad = texto.slice(0, cursoLength + espacioSiguiente);
+                segundaMitad = texto.slice(cursoLength + espacioSiguiente);
+              }
+            }
+            texto = primeraMitad;
+            doc.text(texto,getMidWidht(doc.internal.pageSize.getWidth(), doc.getTextDimensions(texto, { fontCurso }).w),116+altura)
+            texto = segundaMitad
+            doc.text(texto,getMidWidht(doc.internal.pageSize.getWidth(), doc.getTextDimensions(texto, { fontCurso }).w),119+altura)
+    
+          }else{
+            doc.text(texto,getMidWidht(doc.internal.pageSize.getWidth(), doc.getTextDimensions(texto, { fontCurso }).w),118+altura)
+          }
           // Duracion en horas
           doc.setTextColor(0, 0, 0);
           doc.setFont('helvetica', 'normal');
@@ -472,7 +495,10 @@ export function usePDFGenerator() {
     var textX = (docWidth - textWidth) / 2;
     return textX
   }
-
+  function getMidWidht(pagewidth,textWidth){
+    return  (pagewidth - textWidth) / 2;
+  
+  }
   return {
     generatingPDF,
     generatePDF,
