@@ -144,8 +144,10 @@ export function usePDFGenerator() {
           //Datos del curso
           doc.setTextColor(0, 0, 0);
           doc.setFont('helvetica', 'bold');
-          doc.setFontSize(12);
-          doc.text(curso.value, gethalf(doc.getStringUnitWidth(curso.value),12,docWidth-1,scaleFactor), 118+altura);
+          let fontCurso = 12;
+          if (curso.value.length > 70) fontCurso = 10
+          doc.setFontSize(fontCurso);
+          doc.text(curso.value, gethalf(doc.getStringUnitWidth(curso.value),fontCurso,docWidth-1,scaleFactor), 118+altura);
           // Duracion en horas
           doc.setTextColor(0, 0, 0);
           doc.setFont('helvetica', 'normal');
