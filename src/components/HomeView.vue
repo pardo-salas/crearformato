@@ -19,7 +19,7 @@
           </div>
           <div class="flex flex-col justify-center items-center">
             <label>Ingresar Logo</label>
-            <input id="fileImg" ref="imageInput1" @change="handleFileChange(1)" type="file" accept=".jpg,.png">
+            <input id="fileImg" ref="imageInput1" @change="handleFileChange(1)" type="file" accept=".jpg,.jpeg,.png">
           </div>
           <div class="flex flex-col justify-center items-center">
             <label>Ingresar Logo Curso</label>
@@ -93,10 +93,6 @@
             <input type="text" name="folio" v-model="folio" id="replegal">
           </div>
         </div>
-      </div>
-      <div class="p-4 flex">
-        <!-- <iframe  ref="pdfPreview" width="500" height="500"></iframe> -->
-        <!-- <iframe id="pdfConstancia" ref="pdfPreview" width="500" height="500"></iframe> -->
       </div>
     </div>
 </template>
@@ -223,10 +219,9 @@ function convertToJson()  {
       instructor :instructor.value,
       replegal : replegal.value,
       pretrabajador : pretrabajador.value,
-      curso : curso.xvalue
+      curso : curso.value
     }
-    
-    generatePDF(valores.value,data)
+    generatePDF(valores.value,data,imgLogo.value,imgLogo2.value)
 
     // //Crear constancias
     if(registroContancia.length>0){

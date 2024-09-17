@@ -5,23 +5,22 @@ export function usePDFGenerator() {
   const generatingPDF = ref(false);
  
 
-  async function generatePDF(registros,datos) {
+  async function generatePDF(registros,datos,logo,cursoImg) {
     generatingPDF.value = true;
     try {
         const doc = new jsPDF();
         const docWidth = doc.internal.pageSize.getWidth();
         const scaleFactor =doc.internal.scaleFactor;
         let texto = ""
-        let imagen1 = "/img/logo.webp"
-        let imagen2 = "/img/curso.webp"
         const folioArray = datos.folio.split('-');
         let consecutivo = folioArray[folioArray.length-1].replace(/^0+/, '');
         let altura = 9
-        
         //Crear Formatos
+        logo = logo !== null ? logo : "/img/logo.webp";
+        cursoImg = cursoImg !== null ? cursoImg : "/img/curso.webp";
         for (let i = 0; i < registros.length; i++) {
-          doc.addImage(imagen1,10,8+altura,78,15)
-          doc.addImage(imagen2,150,altura-5,45,35)
+          doc.addImage(logo,10,8+altura,78,15)
+          doc.addImage(cursoImg,150,altura-5,45,35)
           
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(12);
