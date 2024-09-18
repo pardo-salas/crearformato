@@ -284,22 +284,45 @@ function crearConstancias(){
     docCons.setFontSize(38);
     texto = curso.value
     fontSize=38
-    if(curso.value.length >30 ){
-      let primeraMitad = curso.value.slice(0, 30);
-      let segundaMitad = curso.value.slice(30);
-      if (texto.charAt(30) !== ' ' && texto.charAt(30 - 1) !== ' ') {
-        const espacioAnterior = primeraMitad.lastIndexOf(' ');
-        const espacioSiguiente = segundaMitad.indexOf(' ');
+    if(curso.value.length > 30 ){
+
+      fontSize=30
+      if (curso.value.length > 80) fontSize = 20 
+      docCons.setFontSize(fontSize);
+      let cursoLength = curso.value.length / 2;
+
+      if (curso.value.length > 80) {
         
-        if (espacioAnterior !== -1 && espacioSiguiente !== -1) {
-          primeraMitad = texto.slice(0, 30 + espacioSiguiente);
-          segundaMitad = texto.slice(30 + espacioSiguiente);
+          let lineas = dividirTexto(texto, 70);
+
+          // Definir la posición inicial de la primera línea
+          let y = 95;
+
+          // Agregar cada línea al documento
+          lineas.forEach(linea => {
+              docCons.text(linea, getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(linea, { fontSize }).w), y);
+              y += 10; // Incrementar la posición Y para la siguiente línea
+          });
+
+      } else {
+        
+        let primeraMitad = curso.value.slice(0, cursoLength);
+        let segundaMitad = curso.value.slice(cursoLength);
+        if (texto.charAt(cursoLength) !== ' ' && texto.charAt(cursoLength - 1) !== ' ') {
+          const espacioAnterior = primeraMitad.lastIndexOf(' ');
+          const espacioSiguiente = segundaMitad.indexOf(' ');
+          
+          if (espacioAnterior !== -1 && espacioSiguiente !== -1) {
+            primeraMitad = texto.slice(0, cursoLength + espacioSiguiente);
+            segundaMitad = texto.slice(cursoLength + espacioSiguiente);
+          }
         }
+        texto = primeraMitad;
+        docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),100)
+        texto = segundaMitad
+        docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),110)
+
       }
-      texto = primeraMitad;
-      docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),105)
-      texto = segundaMitad
-      docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),118)
 
     }else{
       docCons.text(texto,getMidWidht(docCons.internal.pageSize.getWidth(), docCons.getTextDimensions(texto, { fontSize }).w),105)
@@ -338,8 +361,8 @@ function crearConstancias(){
     if (index !== registroContancia.length - 1) {
       docCons.addPage(); // Agregar una nueva página si se alcanza el límite de la página actual y no es el último objeto
     }
-    docCons.save("constancias");
   }
+  docCons.save("constancias");
 }
 
 function crearCredencial(){
@@ -362,6 +385,28 @@ function formatoNombre(cadena) {
     return cadena.replace(/\b\w/g, function(l) {
         return l.toUpperCase();
     });
+}
+
+// Función para dividir el texto en líneas
+function dividirTexto(texto, maxLength) {
+    let palabras = texto.split(' ');
+    let lineas = [];
+    let lineaActual = '';
+
+    palabras.forEach(palabra => {
+        if ((lineaActual + palabra).length < maxLength) {
+            lineaActual += palabra + ' ';
+        } else {
+            lineas.push(lineaActual.trim());
+            lineaActual = palabra + ' ';
+        }
+    });
+
+    if (lineaActual.length > 0) {
+        lineas.push(lineaActual.trim());
+    }
+
+    return lineas;
 }
 
 
