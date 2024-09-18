@@ -5,7 +5,7 @@ export function usePDFGenerator() {
   const generatingPDF = ref(false);
  
 
-  async function generatePDF(registros,datos,logo,cursoImg) {
+  async function generatePDF(registros,datos,logo,cursoImg,firmas) {
     generatingPDF.value = true;
     try {
         const doc = new jsPDF();
@@ -285,13 +285,16 @@ export function usePDFGenerator() {
           doc.setFont('helvetica', 'normal')
           doc.setFontSize(7);
           doc.text("Instructor o Tutor", 33 ,170+altura);
-          doc.addImage("/img/avila.png",'PNG',15,170+altura,60,25)
+          let firma1 = firmas[0] !==null ? firmas[0] : "/img/avila.png"
+          doc.addImage(firma1,15,170+altura,60,25)
           doc.text("Nombre y Firma",35,195+altura)
           doc.text("Patrón o representante legal", 85 ,170+altura);
-          doc.addImage("/img/mariaelena.png",87,166+altura,30,40)
+          let firma2 = firmas[1] !==null ? firmas[1] : "/img/mariaelena.png"
+          doc.addImage(firma2,87,166+altura,30,40)
           doc.text("Nombre y Firma",92,195+altura)
           doc.text("Representante de los trabajadores", 144 ,170+altura);
-          doc.addImage("/img/veronica.png",147,174+altura,30,20)
+          let firma3 = firmas[2] !==null ? firmas[1] : "/img/veronica.png"
+          doc.addImage(firma3,147,174+altura,30,20)
           doc.text("Nombre y Firma",155,195+altura)
 
 

@@ -1,6 +1,5 @@
 <template>
   <h1 class="text-white my-8">Generador de Formatos</h1>
-  <span v-if="deshabilitado">Cargando por favor espere...</span>
   <div class="flex justify-center gap-4">
     <a href="/doc/Plantilla_BaseDatos.xlsx" download>
       <button >Descargar Plantilla</button>
@@ -9,92 +8,112 @@
     <button v-if="constancia" @click="crearConstancias()">Crear Constancia</button>
     <button v-if="credencial" @click="crearCredencial()">Crear Credencial</button>
   </div>
-    <div class="flex flex-col justify-center items-center my-8 w-full">
-      <div class="flex flex-col gap-2 p-2">
-        <!-- Inputs  -->
-        <div class="flex justify-center">
-          <div class="flex flex-col justify-center items-center">
-            <label>Ingresar Base de Datos</label>
-            <input id="fileXLS" type="file" @change="handleFileUpload" accept=".xls,.xlsx">
+  <div class="flex flex-col justify-center items-center my-8 w-full">
+    <div class="flex flex-col gap-2 p-2">
+      <!-- Inputs  -->
+      <div class="flex justify-center">
+        <div class="flex flex-col justify-center items-center">
+          <label>Ingresar Base de Datos</label>
+          <input id="fileXLS" type="file" @change="handleFileUpload" accept=".xls,.xlsx">
+        </div>
+        <div class="flex flex-col justify-center items-center">
+          <label>Ingresar Logo</label>
+          <input id="fileImg" ref="imageInput1" @change="handleFileChange(1)" type="file" accept=".jpg,.jpeg,.png">
+        </div>
+        <div class="flex flex-col justify-center items-center">
+          <label>Ingresar Logo Curso</label>
+          <input id="fileImg" ref="imageInput2" @change="handleFileChange(2)" type="file" accept=".jpg,.png">
+        </div>
+      </div>
+      <!-- Formulario -->
+      <div class="flex flex-col mx-auto p-2 w-full justify-center items-center">
+        <div class="grid grid-cols-4 gap-4 w-full">
+          <!-- Razon Social -->
+          <div class="col-span-2 grid grid-cols-1 items-start">
+            <label for="razon_social">Razon Social: </label>
+            <input type="text" name="razon_social" v-model="razon_social" id="razon_social">
           </div>
-          <div class="flex flex-col justify-center items-center">
-            <label>Ingresar Logo</label>
-            <input id="fileImg" ref="imageInput1" @change="handleFileChange(1)" type="file" accept=".jpg,.jpeg,.png">
-          </div>
-          <div class="flex flex-col justify-center items-center">
-            <label>Ingresar Logo Curso</label>
-            <input id="fileImg" ref="imageInput2" @change="handleFileChange(2)" type="file" accept=".jpg,.png">
+          <!-- RFC -->
+          <div class="col-span-2 grid grid-cols-1 items-start">
+            <label for="RFC">RFC: </label>
+            <input type="text" v-mask="'AAA-######-AA#'"  name="RFC" v-model="rfc" id="RFC">
           </div>
         </div>
-        <!-- Formulario -->
-        <div class="flex flex-col mx-auto p-2 w-full justify-center items-center">
-          <div class="grid grid-cols-4 gap-4 w-full">
-            <!-- Razon Social -->
-            <div class="col-span-2 grid grid-cols-1 items-start">
-              <label for="razon_social">Razon Social: </label>
-              <input type="text" name="razon_social" v-model="razon_social" id="razon_social">
-            </div>
-            <!-- RFC -->
-            <div class="col-span-2 grid grid-cols-1 items-start">
-              <label for="RFC">RFC: </label>
-              <input type="text" v-mask="'AAA-######-AA#'"  name="RFC" v-model="rfc" id="RFC">
-            </div>
+        <div class="grid grid-cols-4 gap-4 w-full">
+          <!-- Ocupacion -->
+          <div class="col-span-2 grid grid-cols-1 items-start">
+            <label for="ocupacion">Ocupacion: </label>
+            <input type="text" name="ocupacion" v-model="ocupacion" id="ocupacion">
           </div>
-          <div class="grid grid-cols-4 gap-4 w-full">
-            <!-- Ocupacion -->
-            <div class="col-span-2 grid grid-cols-1 items-start">
-              <label for="ocupacion">Ocupacion: </label>
-              <input type="text" name="ocupacion" v-model="ocupacion" id="ocupacion">
-            </div>
-            <!-- Capacitador -->
-            <div class="col-span-2 grid grid-cols-1 items-start">
-              <label for="capacitador">Capacitador: </label>
-              <input type="text" name="capacitador" v-model="capacitador" id="capacitador">
-            </div>
+          <!-- Capacitador -->
+          <div class="col-span-2 grid grid-cols-1 items-start">
+            <label for="capacitador">Capacitador: </label>
+            <input type="text" name="capacitador" v-model="capacitador" id="capacitador">
           </div>
-          <div class="grid grid-cols-4 gap-4 w-full">
-            <!-- REGISTRO ACE STPS -->
-            <div class="col-span-2 grid grid-cols-1 items-start">
-              <label for="acestps">Registro ACE STPS: </label>
-              <input type="text" name="acestps" mask="000-00 00 00" v-model="acestps" id="acestps">
-            </div>
-            <!-- Instructor o Tutor -->
-            <div class="col-span-2 grid grid-cols-1 items-start">
-              <label for="instructor">Instructor o Tutor: </label>
-              <input type="text" name="instructor" v-model="instructor" id="instructor">
-            </div>
+        </div>
+        <div class="grid grid-cols-4 gap-4 w-full">
+          <!-- REGISTRO ACE STPS -->
+          <div class="col-span-2 grid grid-cols-1 items-start">
+            <label for="acestps">Registro ACE STPS: </label>
+            <input type="text" name="acestps" mask="000-00 00 00" v-model="acestps" id="acestps">
           </div>
-          <div class="grid grid-cols-4 gap-4 w-full">
-            <!-- Patron o representante legal -->
-            <div class="col-span-2 grid grid-cols-1 items-start">
-              <label for="replegal">Patron o representante legal: </label>
-              <input type="text" name="replegal" v-model="replegal" id="replegal">
-            </div>
-            <!-- Representante de los trabajadores -->
-            <div class="col-span-2 grid grid-cols-1 items-start">
-              <label for="pretrabajador">Representante de los trabajadores: </label>
-              <input type="text" name="pretrabajador" v-model="pretrabajador" id="pretrabajador">
-            </div>
+          <!-- Instructor o Tutor -->
+          <div class="col-span-2 grid grid-cols-1 items-start">
+            <label for="instructor">Instructor o Tutor: </label>
+            <input type="text" name="instructor" v-model="instructor" id="instructor">
           </div>
-          <div class="grid grid-cols-4 gap-4 w-full">
-            <!-- Patron o representante legal -->
-            <div class="col-span-2 grid grid-cols-1 items-start">
-              <label for="curso">Curso: </label>
-              <input type="text" name="curso" v-model="curso" id="curso">
-            </div>
-            <!-- Folio -->
-            <div class="col-span-2 grid grid-cols-1 items-start">
-              <label for="area">Area: </label>
-              <input type="text" name="area" v-model="area" id="area">
-            </div>
+        </div>
+        <div class="grid grid-cols-4 gap-4 w-full">
+          <!-- Patron o representante legal -->
+          <div class="col-span-2 grid grid-cols-1 items-start">
+            <label for="replegal">Patron o representante legal: </label>
+            <input type="text" name="replegal" v-model="replegal" id="replegal">
           </div>
-          <div class="grid grid-cols-1 w-60 mt-2 ">
-            <label for="folio">Folio: </label>
-            <input type="text" name="folio" v-model="folio" id="replegal">
+          <!-- Representante de los trabajadores -->
+          <div class="col-span-2 grid grid-cols-1 items-start">
+            <label for="pretrabajador">Representante de los trabajadores: </label>
+            <input type="text" name="pretrabajador" v-model="pretrabajador" id="pretrabajador">
+          </div>
+        </div>
+        <div class="grid grid-cols-4 gap-4 w-full">
+          <!-- Patron o representante legal -->
+          <div class="col-span-2 grid grid-cols-1 items-start">
+            <label for="curso">Curso: </label>
+            <input type="text" name="curso" v-model="curso" id="curso">
+          </div>
+          <!-- Folio -->
+          <div class="col-span-2 grid grid-cols-1 items-start">
+            <label for="area">Area: </label>
+            <input type="text" name="area" v-model="area" id="area">
+          </div>
+        </div>
+        <div class="grid grid-cols-1 w-60 mt-2 ">
+          <label for="folio">Folio: </label>
+          <input type="text" name="folio" v-model="folio" id="replegal">
+        </div>
+      </div> <!-- End section -->
+      <div class="flex flex-col mx-auto p-2 w-full justify-center items-center">
+        <span>Firmas:</span>
+        <div class="grid grid-cols-3 gap-4 w-full">
+          <!-- Patron o representante legal -->
+          <div class="col-span-1 grid grid-cols-1 items-start">
+            <label for="instructorImg">Instructor: </label>
+            <input type="file" ref="imageInput3" accept=".jpg,.jpeg,.png" @change="handleFileChange(3)">
+          </div>
+          <!-- Folio -->
+          <div class="col-span-1 grid grid-cols-1 items-start">
+            <label for="representanteImg">Representante Legal: </label>
+            <input type="file" ref="imageInput4" accept=".jpg,.jpeg,.png" @change="handleFileChange(4)">
+          </div>
+          <!-- Folio -->
+          <div class="col-span-1 grid grid-cols-1 items-start">
+            <label for="area">Representante de trabajadores: </label>
+            <input type="file" ref="imageInput5" name="area" accept=".jpg,.jpeg,.png" @change="handleFileChange(5)">
           </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -124,8 +143,14 @@ let curso = ref("")
 
 let imgLogo = ref(null);
 let imgLogo2 = ref(null);
+let firma1 = ref(null);
+let firma2 = ref(null);
+let firma3 = ref(null);
 const imageInput1 = ref(null);
 const imageInput2 = ref(null);
+const imageInput3 = ref(null);
+const imageInput4 = ref(null);
+const imageInput5 = ref(null);
 
 const deshabilitado = ref(false);
 const constancia = ref(false);
@@ -167,10 +192,49 @@ const handleFileUpload = async (event) => {
 }
 
 const handleFileChange = (index) => {
-  const fileInput = index === 1 ? imageInput1.value : imageInput2.value;
-  if (fileInput && fileInput.files && fileInput.files.length > 0) {
-    const file = fileInput.files[0];
+  let inputF
+  switch (index) {
+    case 1:
+        inputF = imageInput1.value
+        break;
+      case 2:
+        inputF = imageInput2.value;
+        break;
+      case 3:
+      inputF = imageInput3.value;
+        break;
+      case 4:
+      inputF = imageInput4.value;
+        break;
+      case 5:
+      inputF = imageInput5.value;
+        break;
+      default:
+        break;
+  }
+
+  if (inputF && inputF.files && inputF.files.length > 0) {
+    const file = inputF.files[0];
     const imageURL = URL.createObjectURL(file);
+    switch (index) {
+      case 1:
+        imgLogo.value = imageURL;
+        break;
+      case 2:
+        imgLogo2.value = imageURL;
+        break;
+      case 3:
+        firma1.value = imageURL;
+        break;
+      case 4:
+        firma2.value = imageURL;
+        break;
+      case 5:
+        firma3.value = imageURL;
+        break;
+      default:
+        break;
+    }
     if (index === 1) {
       imgLogo.value = imageURL;
     } else if (index === 2) {
@@ -221,7 +285,8 @@ function convertToJson()  {
       pretrabajador : pretrabajador.value,
       curso : curso.value
     }
-    generatePDF(valores.value,data,imgLogo.value,imgLogo2.value)
+    let firmas = [firma1.value,firma2.value,firma3.value]
+    generatePDF(valores.value,data,imgLogo.value,imgLogo2.value,firmas)
 
     // //Crear constancias
     if(registroContancia.length>0){
