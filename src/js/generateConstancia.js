@@ -179,7 +179,7 @@ export function usePDFGenerator() {
           doc.setTextColor(0, 0, 0);
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(10);
-          doc.text(registros[i].duracion, 30, 128+altura);
+          doc.text(registros[i].duracion.toString(), 30, 128+altura);
           // Periodo de Ejecucion
           // Duracion en horas
           doc.setTextColor(0, 0, 0);
