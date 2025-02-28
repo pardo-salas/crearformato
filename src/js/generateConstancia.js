@@ -204,53 +204,54 @@ export function usePDFGenerator() {
           doc.setFontSize(10);
           x=88
           let xDFin = 149
-          for (let index = 0; index < 4; index++) {
-            doc.text(registros[i].fecha_inicio.getFullYear().toString()[index], x+2.5, 128.5+altura);
-            doc.text(registros[i].fecha_termino.getFullYear().toString()[index], xDFin+2.5, 128.5+altura);
+            for (let index = 0; index < 4; index++) {
+            doc.text(registros[i].fecha_inicio.getUTCFullYear().toString()[index], x+2.5, 128.5+altura);
+            doc.text(registros[i].fecha_termino.getUTCFullYear().toString()[index], xDFin+2.5, 128.5+altura);
 
             doc.line(x,130+altura,x,125+altura)
             doc.line(xDFin,130+altura,xDFin,125+altura)
             xDFin += 6.25
             x+=6.25
-          }
-          
-          xDFin = 180.5
-          //Meses
-          doc.line(119.5,130+altura,119.5,125+altura)
-          if((registros[i].fecha_inicio.getMonth()+1).toString().length == 1) {
+            }
+            
+            xDFin = 180.5
+            //Meses
+            doc.line(119.5,130+altura,119.5,125+altura)
+            if((registros[i].fecha_inicio.getUTCMonth()+1).toString().length == 1) {
             doc.text('0', 115, 128.5+altura);
-            doc.text((registros[i].fecha_inicio.getMonth()+1).toString(), 121.5, 128.5+altura);
-          } else{
-            doc.text((registros[i].fecha_inicio.getMonth()+1).toString()[0], 115.5, 128.5+altura);
-            doc.text((registros[i].fecha_inicio.getMonth()+1).toString()[1], 121.5, 128.5+altura);
-          }
+            doc.text((registros[i].fecha_inicio.getUTCMonth()+1).toString(), 121.5, 128.5+altura);
+            } else{
+            doc.text((registros[i].fecha_inicio.getUTCMonth()+1).toString()[0], 115.5, 128.5+altura);
+            doc.text((registros[i].fecha_inicio.getUTCMonth()+1).toString()[1], 121.5, 128.5+altura);
+            }
 
-          doc.line(180.5,130+altura,180.5,125+altura)
-          if((registros[i].fecha_termino.getMonth()+1).toString().length == 1){
+            doc.line(180.5,130+altura,180.5,125+altura)
+            if((registros[i].fecha_termino.getUTCMonth()+1).toString().length == 1){
             doc.text('0', 176.5, 128.5+altura);
-            doc.text((registros[i].fecha_termino.getMonth()+1).toString(), 182.5, 128.5+altura);
-          }else{
-            doc.text((registros[i].fecha_termino.getMonth()+1).toString()[0], 176.5, 128.5+altura);
-            doc.text((registros[i].fecha_termino.getMonth()+1).toString()[1], 181.5, 128.5+altura);
-          }
-          //Dias
-          doc.line(132,130+altura,132,125+altura)
-          if((registros[i].fecha_inicio.getDate()+1).toString().length == 1){
+            doc.text((registros[i].fecha_termino.getUTCMonth()+1).toString(), 182.5, 128.5+altura);
+            }else{
+            doc.text((registros[i].fecha_termino.getUTCMonth()+1).toString()[0], 176.5, 128.5+altura);
+            doc.text((registros[i].fecha_termino.getUTCMonth()+1).toString()[1], 181.5, 128.5+altura);
+            }
+            //Dias
+            doc.line(132,130+altura,132,125+altura)
+            if(registros[i].fecha_inicio.getUTCDate().toString().length == 1){
             doc.text('0',128,128.5+altura)
-            doc.text((registros[i].fecha_inicio.getDate()+1).toString(), 134, 128.5+altura);
-          }else{
-            doc.text((registros[i].fecha_inicio.getDate()+1).toString()[0],128,128.5+altura)
-            doc.text((registros[i].fecha_inicio.getDate()+1).toString()[1],134.5, 128.5+altura);
-          }
+            doc.text(registros[i].fecha_inicio.getUTCDate().toString(), 134, 128.5+altura);
+            }else{
+            doc.text(registros[i].fecha_inicio.getUTCDate().toString()[0],128,128.5+altura)
+            doc.text(registros[i].fecha_inicio.getUTCDate().toString()[1],134.5, 128.5+altura);
+            }
 
-          doc.line(193.5,130+altura,193.5,125+altura)
-          if((registros[i].fecha_termino.getDate()+1).toString().length == 1){
+            doc.line(193.5,130+altura,193.5,125+altura)
+            if((registros[i].fecha_termino.getUTCDate()+1).toString().length == 1){
             doc.text('0',190.25,128.5+altura)
-            doc.text((registros[i].fecha_termino.getDate()+1).toString(), 196.75, 128.5+altura);
-          }else{
-            doc.text((registros[i].fecha_termino.getDate()+1).toString()[0],189.25,128.5+altura)
-            doc.text((registros[i].fecha_termino.getDate()+1).toString()[1],196, 128.5+altura);
-          }
+            doc.text((registros[i].fecha_termino.getUTCDate()+1).toString(), 196.75, 128.5+altura);
+            }else{
+            doc.text((registros[i].fecha_termino.getUTCDate()+1).toString()[0],189.25,128.5+altura)
+            doc.text((registros[i].fecha_termino.getUTCDate()+1).toString()[1],196, 128.5+altura);
+            }
+          
 
           //Area Tematica curso
           doc.setTextColor(0, 0, 0);
