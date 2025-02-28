@@ -244,12 +244,12 @@ export function usePDFGenerator() {
             }
 
             doc.line(193.5,130+altura,193.5,125+altura)
-            if((registros[i].fecha_termino.getUTCDate()+1).toString().length == 1){
+            if((registros[i].fecha_termino.getUTCDate()).toString().length == 1){
             doc.text('0',190.25,128.5+altura)
-            doc.text((registros[i].fecha_termino.getUTCDate()+1).toString(), 196.75, 128.5+altura);
+            doc.text((registros[i].fecha_termino.getUTCDate()).toString(), 196.75, 128.5+altura);
             }else{
-            doc.text((registros[i].fecha_termino.getUTCDate()+1).toString()[0],189.25,128.5+altura)
-            doc.text((registros[i].fecha_termino.getUTCDate()+1).toString()[1],196, 128.5+altura);
+            doc.text((registros[i].fecha_termino.getUTCDate()).toString()[0],189.25,128.5+altura)
+            doc.text((registros[i].fecha_termino.getUTCDate()).toString()[1],196, 128.5+altura);
             }
           
 
